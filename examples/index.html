@@ -1,28 +1,72 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <!-- <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet" /> -->
+        <link href="../jsongrid.css" rel="stylesheet" />
         <style>
-            table.jsongrid {
-                padding: 0;
-                margin: 0;
+            body {
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 14px;
+            }
+            .container {
+                width: 1170px;
+                margin: 40px auto;
             }
         </style>
     </head>
     <body>
 
-        <div class="container" style="margin-top: 50px;"></div>
+        <div class="container">
+            <table class="grid">
+                <tr>
+                    <td class="pad"><input type="checkbox" /></td>
+                    <td class="key">Hello</td>
+                    <td class="value">World</td>
+                </tr>
+                <tr>
+                    <td class="pad"></td>
+                    <td colspan="2" class="nested">
+                        <table class="grid">
+                            <tr>
+                                <td class="pad"><input type="checkbox" /></td>
+                                <td class="key">foo</td>
+                                <td class="value">bar</td>
+                            </tr>
+                            <tr>
+                                <td class="pad"><input type="checkbox" /></td>
+                                <td class="key">name</td>
+                                <td class="value">roi</td>
+                            </tr>
+                            <tr>
+                                <td class="pad"></td>
+                                <td colspan="2" class="nested">
+                                     <table class="grid">
+                                        <tr>
+                                            <td class="pad"><input type="checkbox" /></td>
+                                            <td class="key">foo</td>
+                                            <td class="value">bar</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            
+        </div>
+        <div class="here container">
+        </div>
         <script src="jquery.js"></script>
-        <script src="../jsongrid.js?bust=12312312341324"></script>
+        <script src="../jsongrid.js?bust=123123124"></script>
         <script>
-            $( "body div" ).jsongrid({
+            $( "body div.here" ).jsongrid({
                 "hello": "world",
                 "yes": "no",
                 "ok": "cookie",
                 "foo": { "bar": 1, "yes": "ok" }
-            }).find( "table.jsongrid" )
-                .addClass( "table" )
-                .addClass( "table-bordered" );
+            });
         </script>
 
     </body>
