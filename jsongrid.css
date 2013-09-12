@@ -17,10 +17,19 @@ table.grid tr td.pad {
     vertical-align: top;
 }
 table.grid tr td.value {
+    padding: 0;
     width: 840px;
     border-left: 1px solid #ddd;
 }
 table.grid tr td.nested {
     padding: 0;
     border: none ;
+}
+
+table.grid td.value input {
+    border: none;
+    padding: 8px;
+    outline: none;
+    width: 100%;
+    display: block;
 }

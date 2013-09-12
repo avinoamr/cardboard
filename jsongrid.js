@@ -3,7 +3,6 @@
     // grid constructor
     var Grid = function( el, data, options ) {
         this.el = $( el );
-        console.log( options );
         $.extend( this, options );
         this.data = data;
     };
@@ -22,7 +21,8 @@
         for ( var prop in this.data ) {
             this.render_item({ 
                 key: prop, 
-                value: this.data[ prop ]
+                value: this.data[ prop ],
+                nested: "object" == typeof this.data[ prop ]
             });
         }
 
@@ -56,8 +56,20 @@
     // render the value
     Grid.prototype.render_value = function( item, to ) {
         var value = $( "<td class='value' />" );
-        value.html( item.value );
         to.append( value );
+        this.render_input( item, value );
+        return this;
+    };
+
+    // render the input box
+    Grid.prototype.render_input = function( item, to ) {
+        if ( "undefined" == typeof item.value ) {
+            return this;
+        }
+
+        var input = $( "<input type='text' tabindex='1' />" );
+        input.val( item.value );
+        to.append( input );
         return this;
     };
 
@@ -69,6 +81,11 @@
         return this;
     };
 
+    // render a flat object
+    Grid.prototype.render_flat = function( item, to ) {
+        return this.render_key( item, to ).render_value( item, to );
+    };
+
     // render a specific item
     Grid.prototype.render_item = function( item ) {
         var row = $( "<tr />" );
@@ -78,14 +95,8 @@
             this.render_pad( item, row );
         }
 
-        if ( "object" == typeof item.value ) {
-            this.render_nested( item, row );
-        } else {
-            this.render_key( item, row )
-                .render_value( item, row );
-        }
-
-        return this;
+        var render_fn = ( item.nested ) ? this.render_nested : this.render_flat;
+        return render_fn.call( this, item, row );
     };
 
     // jquery plugin
