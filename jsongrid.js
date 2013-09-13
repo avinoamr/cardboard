@@ -7,6 +7,11 @@
         this.data = data;
     };
 
+    // shortcut to jquery element find
+    Grid.prototype.$ = function() {
+        return this.el.find.apply( this.el, arguments );
+    };
+
     // render the grid
     Grid.prototype.render = function() {
         var self = this;
@@ -52,11 +57,6 @@
 
         var render_fn = ( item.nested ) ? this.render_nested : this.render_flat;
         return render_fn.call( this, item, row );
-    };
-
-    // shortcut to jquery element find
-    Grid.prototype.$ = function() {
-        return this.el.find.apply( this.el, arguments );
     };
 
     // render the left pad and selection box
