@@ -15,7 +15,7 @@
             this.render_item({ 
                 key: this.title,
                 pad: false
-            })
+            });
         }
 
         for ( var prop in this.data ) {
@@ -89,7 +89,7 @@
     // render a specific item
     Grid.prototype.render_item = function( item ) {
         var row = $( "<tr />" );
-        this.$( "table.grid" ).append( row );
+        this.$( "> table.grid" ).append( row );
 
         if ( item.pad !== false ) {
             this.render_pad( item, row );

@@ -15,57 +15,23 @@
         </style>
     </head>
     <body>
-
-        <div class="container">
-            <table class="grid">
-                <tr>
-                    <td class="pad"><input type="checkbox" /></td>
-                    <td class="key">Hello</td>
-                    <td class="value">World</td>
-                </tr>
-                <tr>
-                    <td class="pad"></td>
-                    <td colspan="2" class="nested">
-                        <table class="grid">
-                            <tr>
-                                <td class="pad"><input type="checkbox" /></td>
-                                <td class="key">foo</td>
-                                <td class="value">bar</td>
-                            </tr>
-                            <tr>
-                                <td class="pad"><input type="checkbox" /></td>
-                                <td class="key">name</td>
-                                <td class="value">roi</td>
-                            </tr>
-                            <tr>
-                                <td class="pad"></td>
-                                <td colspan="2" class="nested">
-                                     <table class="grid">
-                                        <tr>
-                                            <td class="pad"><input type="checkbox" /></td>
-                                            <td class="key">foo</td>
-                                            <td class="value">bar</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            
-        </div>
-        <div class="here container">
-        </div>
+        <div class="one container"></div>
+        <div class="two container"></div>
         <script src="jquery.js"></script>
         <script src="../jsongrid.js?bust=123123124"></script>
         <script>
-            $( "body div.here" ).jsongrid({
+            $( "body div.one" ).jsongrid({
                 "hello": "world",
                 "yes": "no",
                 "ok": "cookie",
                 "foo": { "bar": 1, "yes": "ok" }
+            });
+
+            $( "body div.two" ).jsongrid({
+                "one": { "name": "Roi", "age": 30 },
+                "two": { "name": "Dana", "age": 28 },
+                "three": { "name": "Shiran", "age": 27 },
+                "four": { "name": "Zohar", "age": 19 }
             });
         </script>
 
