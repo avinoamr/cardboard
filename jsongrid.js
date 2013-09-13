@@ -12,13 +12,11 @@
         var self = this;
         this.el.html( "<table class='grid'><tbody></tbody></table>" );
 
-        if ( this.title ) {
-            this.render_item({ 
-                key: this.title,
-                pad: false,
-                class_: "headline"
-            });
-        }
+        this.render_item({ 
+            key: this.title,
+            pad: false,
+            class_: "headline"
+        });
 
         for ( var prop in this.data ) {
             this.render_item({ 
@@ -42,6 +40,20 @@
         return this;
     };
 
+    // render a specific item
+    Grid.prototype.render_item = function( item ) {
+        var row = $( "<tr />" );
+        this.$( "> table.grid" ).append( row );
+        row.addClass( item.class_ || "" );
+
+        if ( item.pad !== false ) {
+            this.render_pad( item, row );
+        }
+
+        var render_fn = ( item.nested ) ? this.render_nested : this.render_flat;
+        return render_fn.call( this, item, row );
+    };
+
     // shortcut to jquery element find
     Grid.prototype.$ = function() {
         return this.el.find.apply( this.el, arguments );
@@ -58,7 +70,7 @@
     // render the key
     Grid.prototype.render_key = function( item, to ) {
         var key = $( "<td class='key' />" );
-        key.html( item.key );
+        key.html( item.key || "&nbsp;" );
         if ( item.pad === false ) {
             key.attr( "colspan", 2 );
         }
@@ -120,20 +132,6 @@
     Grid.prototype.toggle = function() {
         this.$( "> table.grid" ).toggleClass( "collapsed" );
         return this;
-    };
-
-    // render a specific item
-    Grid.prototype.render_item = function( item ) {
-        var row = $( "<tr />" );
-        this.$( "> table.grid" ).append( row );
-        row.addClass( item.class_ || "" );
-
-        if ( item.pad !== false ) {
-            this.render_pad( item, row );
-        }
-
-        var render_fn = ( item.nested ) ? this.render_nested : this.render_flat;
-        return render_fn.call( this, item, row );
     };
 
     // jquery plugin
