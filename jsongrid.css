@@ -39,3 +39,8 @@ table.grid td.value input {
     width: 100%;
     display: block;
 }
+
+/** COLLAPSE / EXPAND **/
+table.grid.collapsed > tbody > tr:not( .headline ) {
+    display: none;
+}

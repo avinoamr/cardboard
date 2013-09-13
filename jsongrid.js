@@ -9,6 +9,7 @@
 
     // render the grid
     Grid.prototype.render = function() {
+        var self = this;
         this.el.html( "<table class='grid'><tbody></tbody></table>" );
 
         if ( this.title ) {
@@ -26,6 +27,13 @@
                 nested: "object" == typeof this.data[ prop ]
             });
         }
+
+        // apply the headline event
+        var headline = this.$( "> table.grid > tbody > tr.headline > td.key" );
+        this.$( headline ).click( function() {
+            self.toggle();
+            return false;
+        });
 
         if ( this.collapsed ) {
             this.collapse();
@@ -97,9 +105,20 @@
 
     // collapse the grid
     Grid.prototype.collapse = function() {
-        console.log( "COLLAPSE" );
+        //this.$( "> table.grid > tbody > tr:not(.headline)" ).hide();
+        this.$( "> table.grid" ).addClass( "collapsed" );
+        return this;
+    };
 
-        this.$( "> table.grid tr:not(.headline)" ).hide();
+    // expand the grid
+    Grid.prototype.expand = function() {
+        this.$( "> table.grid" ).removeClass( "collapsed" );
+        return this;
+    };
+
+    // toggle the nested collapsible visibility
+    Grid.prototype.toggle = function() {
+        this.$( "> table.grid" ).toggleClass( "collapsed" );
         return this;
     };
 
