@@ -14,7 +14,8 @@
         if ( this.title ) {
             this.render_item({ 
                 key: this.title,
-                pad: false
+                pad: false,
+                class_: "headline"
             });
         }
 
@@ -24,6 +25,10 @@
                 value: this.data[ prop ],
                 nested: "object" == typeof this.data[ prop ]
             });
+        }
+
+        if ( this.collapsed ) {
+            this.collapse();
         }
 
         return this;
@@ -76,8 +81,12 @@
     // render nested object
     Grid.prototype.render_nested = function( item, to ) {
         var nested = $( "<td class='nested' colspan='2' />" );
+        nested.css( "border-top", "none" );
         to.append( nested );
-        nested.jsongrid( item.value, { title: item.key } );
+        nested.jsongrid( item.value, { 
+            title: item.key, 
+            collapsed: true 
+        } );
         return this;
     };
 
@@ -86,10 +95,19 @@
         return this.render_key( item, to ).render_value( item, to );
     };
 
+    // collapse the grid
+    Grid.prototype.collapse = function() {
+        console.log( "COLLAPSE" );
+
+        this.$( "> table.grid tr:not(.headline)" ).hide();
+        return this;
+    };
+
     // render a specific item
     Grid.prototype.render_item = function( item ) {
         var row = $( "<tr />" );
         this.$( "> table.grid" ).append( row );
+        row.addClass( item.class_ || "" );
 
         if ( item.pad !== false ) {
             this.render_pad( item, row );
