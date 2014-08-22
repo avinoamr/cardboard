@@ -39,6 +39,7 @@
         });
 
         if ( this.collapsed ) {
+            headline.css( "font-weight", "bold" );
             this.collapse();
         }
 
@@ -106,7 +107,7 @@
         nested.jsongrid( item.value, { 
             title: item.key, 
             collapsed: true 
-        } );
+        });
         return this;
     };
 
