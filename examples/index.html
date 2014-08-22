@@ -18,14 +18,14 @@
         <div class="one container"></div>
         <div class="two container"></div>
         <script src="jquery.js"></script>
-        <script src="../jsongrid.js?bust=123123124"></script>
+        <script src="../jsongrid.js?bust=1231dsa124"></script>
         <script>
             $( "body div.one" ).jsongrid({
                 "hello": "world",
                 "yes": "no",
                 "ok": "cookie",
                 "foo": { "bar": 1, "yes": "ok" }
-            });
+            }, { checkbox: false } );
 
             $( "body div.two" ).jsongrid({
                 "one": { "name": "Foo", "age": 30 },

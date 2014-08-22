@@ -2,8 +2,8 @@
 
     // grid constructor
     var Grid = function( el, data, options ) {
-        this.el = $( el );
         $.extend( this, options );
+        this.el = $( el );
         this.data = data;
     };
 
@@ -63,7 +63,9 @@
     // render the left pad and selection box
     Grid.prototype.render_pad = function( item, to ) {
         var pad = $( "<td class='pad' />" );
-        pad.html( "<input type='checkbox' />" );
+        if ( this.checkbox !== false ) {
+            pad.html( "<input type='checkbox' />" );
+        }
         to.append( pad );
         return this;
     };
@@ -104,10 +106,13 @@
         var nested = $( "<td class='nested' colspan='2' />" );
         nested.css( "border-top", "none" );
         to.append( nested );
-        nested.jsongrid( item.value, { 
-            title: item.key, 
+
+        var options = $.extend( {}, this, {
+            title: item.key,
             collapsed: true 
         });
+
+        nested.jsongrid( item.value, options );
         return this;
     };
 
