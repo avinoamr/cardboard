@@ -1,9 +1,38 @@
 (function( $ ) {
 
+    var depth = function ( obj ) {
+        var seen = []; // prevent circular lookups
+        function dfs( obj ) {
+            var d = 0;
+            for ( var p in obj ) {
+                var v = obj[ p ];
+                if ( typeof v == "object" && seen.indexOf( v ) == -1 ) {
+                    seen.push( v );
+                    d = Math.max( d, dfs( obj[ p ] ) + 1 );
+                }
+            }
+            return d;
+        }
+        return 1 + dfs( obj );
+    }
+
+    var toggle = function ( ev ) {
+        var target = $( ev.currentTarget );
+        var span = +target.attr( "colspan" );
+        var next = target
+            .parents( "tr" )
+            .nextUntil( function () {
+                return span <= +$( this ).find( "> td.key" ).attr( "colspan" )
+            });
+
+        next.fadeToggle();
+    }
+
     // grid constructor
     var Grid = function( el, data, options ) {
         $.extend( this, options );
         this.el = $( el );
+        this.el.on( "click", ".key", toggle );
         this.data = data;
     };
 
@@ -15,130 +44,66 @@
     // render the grid
     Grid.prototype.render = function() {
         var self = this;
-        this.el.html( "<table class='grid'><tbody></tbody></table>" );
+        this.depth = 1 + depth( this.data );
+        this.table = $( "<table class='grid'></table>" ).appendTo( this.el );
+        this.render_object( this.data, { key: this.title } );
+        return this;
+    };
 
-        this.render_item({ 
-            key: this.title,
-            pad: false,
-            class_: "headline"
+    Grid.prototype.render_object = function ( obj, options ) {
+        var pad = options.pad || 0;
+        this.render_row({
+            key: options.key,
+            pad: pad,
+            strong: true,
         });
 
-        for ( var prop in this.data ) {
-            this.render_item({ 
-                key: prop, 
-                value: this.data[ prop ],
-                nested: "object" == typeof this.data[ prop ]
-            });
+        pad += 1;
+        for ( var prop in obj ) {
+            var v = obj[ prop ];
+            if ( typeof v == "object" ) {
+                this.render_object( v, { pad: pad, key: prop } );
+            } else {
+                this.render_row({
+                    key: prop,
+                    value: obj[ prop ],
+                    pad: pad,
+                })
+            }
+        }
+    }
+
+    Grid.prototype.render_row = function( options ) {
+        var row = $( "<tr>" )
+            .appendTo( this.table );
+
+        var pad = options.pad || 0;
+        for ( var i = 0 ; i < pad ; i += 1 ) {
+            $( "<td class='pad'>" ).appendTo( row );
+        }
+        
+        var k = $( "<td class='key'>" )
+            .attr( "colspan", this.depth - pad )
+            .text( options.key )
+            .appendTo( row );
+
+        if ( options.strong ) {
+            k.css( "font-weight", "bold" );
         }
 
-        // apply the headline event
-        var headline = this.$( "> table.grid > tbody > tr.headline > td.key" );
-        this.$( headline ).click( function() {
-            self.toggle();
-            return false;
-        });
+        var v = $( "<td class='value'>" )
+            .appendTo( row );
 
-        if ( this.collapsed ) {
-            headline.css( "font-weight", "bold" );
-            this.collapse();
+        if ( typeof options.value != "undefined" ) {
+            $( "<input type='text' />" )
+                .val( options.value )
+                .appendTo( v );
         }
 
-        return this;
-    };
+        return row;
+    }
 
-    // render a specific item
-    Grid.prototype.render_item = function( item ) {
-        var row = $( "<tr />" );
-        this.$( "> table.grid" ).append( row );
-        row.addClass( item.class_ || "" );
 
-        if ( item.pad !== false ) {
-            this.render_pad( item, row );
-        }
-
-        var render_fn = ( item.nested ) ? this.render_nested : this.render_flat;
-        return render_fn.call( this, item, row );
-    };
-
-    // render the left pad and selection box
-    Grid.prototype.render_pad = function( item, to ) {
-        var pad = $( "<td class='pad' />" );
-        if ( this.checkbox !== false ) {
-            pad.html( "<input type='checkbox' />" );
-        }
-        to.append( pad );
-        return this;
-    };
-
-    // render the key
-    Grid.prototype.render_key = function( item, to ) {
-        var key = $( "<td class='key' />" );
-        key.html( item.key || "&nbsp;" );
-        if ( item.pad === false ) {
-            key.attr( "colspan", 2 );
-        }
-        to.append( key );
-        return this;
-    };
-
-    // render the value
-    Grid.prototype.render_value = function( item, to ) {
-        var value = $( "<td class='value' />" );
-        to.append( value );
-        this.render_input( item, value );
-        return this;
-    };
-
-    // render the input box
-    Grid.prototype.render_input = function( item, to ) {
-        if ( "undefined" == typeof item.value ) {
-            return this;
-        }
-
-        var input = $( "<input type='text' tabindex='1' />" );
-        input.val( item.value );
-        to.append( input );
-        return this;
-    };
-
-    // render nested object
-    Grid.prototype.render_nested = function( item, to ) {
-        var nested = $( "<td class='nested' colspan='2' />" );
-        nested.css( "border-top", "none" );
-        to.append( nested );
-
-        var options = $.extend( {}, this, {
-            title: item.key,
-            collapsed: true 
-        });
-
-        nested.jsongrid( item.value, options );
-        return this;
-    };
-
-    // render a flat object
-    Grid.prototype.render_flat = function( item, to ) {
-        return this.render_key( item, to ).render_value( item, to );
-    };
-
-    // collapse the grid
-    Grid.prototype.collapse = function() {
-        //this.$( "> table.grid > tbody > tr:not(.headline)" ).hide();
-        this.$( "> table.grid" ).addClass( "collapsed" );
-        return this;
-    };
-
-    // expand the grid
-    Grid.prototype.expand = function() {
-        this.$( "> table.grid" ).removeClass( "collapsed" );
-        return this;
-    };
-
-    // toggle the nested collapsible visibility
-    Grid.prototype.toggle = function() {
-        this.$( "> table.grid" ).toggleClass( "collapsed" );
-        return this;
-    };
 
     // jquery plugin
     $.fn.jsongrid = function( data, options ) {
