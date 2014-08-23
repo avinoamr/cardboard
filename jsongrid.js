@@ -64,6 +64,7 @@
             .appendTo( this.el.empty() );
 
         this.render_object( this.data, { key: this.title } );
+
         return this;
     };
 
@@ -72,46 +73,40 @@
         this.render_row({
             key: options.key,
             pad: pad,
-            strong: true,
+            strong: true
         });
 
         pad += 1;
         for ( var prop in obj ) {
             var v = obj[ prop ];
             if ( typeof v == "object" ) {
-                this.render_object( v, { pad: pad, key: prop, collapsed: true } );
+                this.render_object( v, { pad: pad, key: prop } );
             } else {
+                // console.log( prop, options.collapsed );
                 var row = this.render_row({
                     key: prop,
                     obj: obj,
-                    pad: pad,
-                    collapsed: options.collapsed
+                    pad: pad
                 });
             }
         }
     }
 
     Grid.prototype.render_row = function( options ) {
+        var pad = options.pad || 0;
         var row = $( "<tr>" )
+            .css( "display", ( pad > 1 ) ? "none" : "" )
             .appendTo( this.table );
 
-        if ( options.collapsed ) {
-            row.css( "display", "none" );
-        }
-
-        var pad = options.pad || 0;
         for ( var i = 0 ; i < pad ; i += 1 ) {
             $( "<td class='pad'>" ).appendTo( row );
         }
         
-        var k = $( "<td class='key'>" )
+        $( "<td class='key'>" )
             .attr( "colspan", this.depth - pad )
             .text( options.key )
+            .css( "font-weight", ( options.strong ) ? "bold" : "" )
             .appendTo( row );
-
-        if ( options.strong ) {
-            k.css( "font-weight", "bold" );
-        }
 
         var v = $( "<td class='value'>" )
             .appendTo( row );
