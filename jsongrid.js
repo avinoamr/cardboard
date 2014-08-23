@@ -25,7 +25,15 @@
                 return span <= +$( this ).find( "> td.key" ).attr( "colspan" )
             });
 
-        next.fadeToggle();
+        if ( next.first().is( ":visible" ) ) {
+            next.fadeOut();
+        } else {
+            // only fade in the direct children of this row
+            next.filter( function () {
+                return span - 1 == +$( this ).find( "> td.key" ).attr( "colspan" )
+            })
+            .fadeIn();
+        }
     }
 
     // grid constructor
@@ -45,7 +53,9 @@
     Grid.prototype.render = function() {
         var self = this;
         this.depth = 1 + depth( this.data );
-        this.table = $( "<table class='grid'></table>" ).appendTo( this.el );
+        this.table = $( "<table class='grid'></table>" )
+            .appendTo( this.el.empty() );
+
         this.render_object( this.data, { key: this.title } );
         return this;
     };
@@ -62,13 +72,14 @@
         for ( var prop in obj ) {
             var v = obj[ prop ];
             if ( typeof v == "object" ) {
-                this.render_object( v, { pad: pad, key: prop } );
+                this.render_object( v, { pad: pad, key: prop, collapsed: true } );
             } else {
-                this.render_row({
+                var row = this.render_row({
                     key: prop,
                     value: obj[ prop ],
                     pad: pad,
-                })
+                    collapsed: options.collapsed
+                });
             }
         }
     }
@@ -76,6 +87,10 @@
     Grid.prototype.render_row = function( options ) {
         var row = $( "<tr>" )
             .appendTo( this.table );
+
+        if ( options.collapsed ) {
+            row.css( "display", "none" );
+        }
 
         var pad = options.pad || 0;
         for ( var i = 0 ; i < pad ; i += 1 ) {
