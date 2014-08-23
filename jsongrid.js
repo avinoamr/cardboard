@@ -36,11 +36,18 @@
         }
     }
 
+    var change = function ( ev ) {
+        var target = $( ev.currentTarget );
+        var data = target.data( "jsongrid" );
+        data.obj[ data.key ] = target.val();
+    }
+
     // grid constructor
     var Grid = function( el, data, options ) {
         $.extend( this, options );
         this.el = $( el );
         this.el.on( "click", ".key", toggle );
+        this.el.on( "change", "input", change );
         this.data = data;
     };
 
@@ -76,7 +83,7 @@
             } else {
                 var row = this.render_row({
                     key: prop,
-                    value: obj[ prop ],
+                    obj: obj,
                     pad: pad,
                     collapsed: options.collapsed
                 });
@@ -109,16 +116,16 @@
         var v = $( "<td class='value'>" )
             .appendTo( row );
 
-        if ( typeof options.value != "undefined" ) {
+        var value = options.obj ? options.obj[ options.key ] : undefined;
+        if ( typeof value != "undefined" ) {
             $( "<input type='text' />" )
-                .val( options.value )
+                .val( value )
+                .data( "jsongrid", { obj: options.obj, key: options.key } )
                 .appendTo( v );
         }
 
         return row;
     }
-
-
 
     // jquery plugin
     $.fn.jsongrid = function( data, options ) {

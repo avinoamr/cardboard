@@ -20,14 +20,15 @@
         <script src="jquery.js"></script>
         <script src="../jsongrid.js?bust=1231dsa124"></script>
         <script>
-            $( "body div.one" ).jsongrid({
+            var d1, d2;
+            $( "body div.one" ).jsongrid( d1 = {
                 "hello": "world",
                 "yes": "no",
                 "ok": "cookie",
                 "foo": { "bar": 1, "yes": "ok" }
             }, { checkbox: false, title: "Settings" } );
 
-            $( "body div.two" ).jsongrid({
+            $( "body div.two" ).jsongrid( d2 = {
                 "one": { "name": "Foo", "age": 30 },
                 "two": { "name": "Bar", "age": 28 },
                 "three": { "name": "Hello", "age": 27 },
