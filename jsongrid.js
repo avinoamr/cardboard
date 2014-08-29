@@ -62,21 +62,20 @@
         this.depth = 1 + depth( this.data );
         this.table = $( "<table class='grid'></table>" )
             .appendTo( this.el.empty() );
-
         this.render_object( this.data, { key: this.title } );
-
         return this;
     };
 
     Grid.prototype.render_object = function ( obj, options ) {
         var pad = options.pad || 0;
-        this.render_row({
-            key: options.key,
-            pad: pad,
-            strong: true
-        });
-
-        pad += 1;
+        if ( options.key !== false ) {
+            this.render_row({
+                key: options.key,
+                pad: pad,
+                strong: true
+            });
+            pad += 1;
+        }
         for ( var prop in obj ) {
             var v = obj[ prop ];
             if ( typeof v == "object" ) {
