@@ -8,6 +8,11 @@ table.grid {
     border-collapse:collapse;
     border: 1px solid #ddd;
 }
+table.grid th {
+    background: #f5f5f5;
+    padding: 10px;
+}
+
 table.grid td.nested table.grid {
     border: none; /* nested grids has no border */
 }

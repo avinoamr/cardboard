@@ -61,35 +61,41 @@
         this.depth = 1 + depth( this.data );
         this.table = $( "<table class='grid'></table>" )
             .appendTo( this.el.empty() );
-        this.render_object( this.data, { key: this.title } );
+
+
+        if ( this.title ) { this.render_header() }
+        this.render_object( this.data, {} );
         return this;
     };
 
+    Grid.prototype.render_header = function () {
+        var head = $( "<thead>" )
+            .appendTo( this.table );
+
+        var row = $( "<tr>" )
+            .appendTo( head );
+
+        var header = $( "<th>" )
+            .text( this.title )
+            .attr( "colspan", 1 + this.depth )
+            .appendTo( row );
+    }
+
     Grid.prototype.render_object = function ( obj, options ) {
-        var pad = options.pad || ( options.pad == 0 );
-        if ( options.key !== false ) {
-            this.render_row({
-                key: options.key,
-                pad: pad,
-                strong: true,
-                hidden: pad > 1
-            });
-            pad += 1;
-        }
-        
+        var pad = options.pad || ( options.pad = 0 );
         for ( var prop in obj ) {
             var v = obj[ prop ];
+            this.render_row({
+                key: prop,
+                obj: obj,
+                pad: pad,
+                strong: typeof v == "object"
+            });
+
             if ( typeof v == "object" ) {
                 this.render_object( v, { 
-                    pad: pad, 
+                    pad: pad + 1, 
                     key: prop 
-                });
-            } else {
-                this.render_row({
-                    key: prop,
-                    obj: obj,
-                    pad: pad,
-                    hidden: pad > 1
                 });
             }
         }
@@ -98,7 +104,7 @@
     Grid.prototype.render_row = function( options ) {
         var pad = options.pad;
         var row = $( "<tr>" )
-            .toggleClass( "hide", options.hidden == true )
+            .toggleClass( "hide", pad > 0 )
             .appendTo( this.table );
 
         for ( var i = 0 ; i < pad ; i += 1 ) {
@@ -117,7 +123,7 @@
             .appendTo( row );
 
         var value = options.obj ? options.obj[ options.key ] : undefined;
-        if ( typeof value != "undefined" ) {
+        if ( typeof value != "undefined" && typeof value != "object" ) {
             $( "<input type='text' />" )
                 .val( value )
                 .data( "jsongrid", { obj: options.obj, key: options.key } )
