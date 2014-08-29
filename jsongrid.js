@@ -26,13 +26,12 @@
             });
 
         if ( next.first().is( ":visible" ) ) {
-            next.fadeOut();
+            next.addClass( "hide" );
         } else {
             // only fade in the direct children of this row
             next.filter( function () {
                 return span - 1 == +$( this ).find( "> td.key" ).attr( "colspan" )
-            })
-            .fadeIn();
+            }).removeClass( "hide" );
         }
     }
 
@@ -67,12 +66,13 @@
     };
 
     Grid.prototype.render_object = function ( obj, options ) {
-        var pad = options.pad || 0;
+        var pad = options.pad || ( options.pad == 0 );
         if ( options.key !== false ) {
             this.render_row({
                 key: options.key,
                 pad: pad,
-                strong: true
+                strong: true,
+                hidden: pad > 1
             });
             pad += 1;
         }
@@ -80,32 +80,38 @@
         for ( var prop in obj ) {
             var v = obj[ prop ];
             if ( typeof v == "object" ) {
-                this.render_object( v, { pad: pad, key: prop } );
+                this.render_object( v, { 
+                    pad: pad, 
+                    key: prop 
+                });
             } else {
-                var row = this.render_row({
+                this.render_row({
                     key: prop,
                     obj: obj,
-                    pad: pad
+                    pad: pad,
+                    hidden: pad > 1
                 });
             }
         }
     }
 
     Grid.prototype.render_row = function( options ) {
-        var pad = options.pad || 0;
+        var pad = options.pad;
         var row = $( "<tr>" )
-            .css( "display", ( pad > 1 ) ? "none" : "" )
+            .toggleClass( "hide", options.hidden == true )
             .appendTo( this.table );
 
         for ( var i = 0 ; i < pad ; i += 1 ) {
             $( "<td class='pad'>" ).appendTo( row );
         }
         
-        $( "<td class='key'>" )
+        var td = $( "<td class='key'>" )
             .attr( "colspan", this.depth - pad )
-            .text( options.key )
-            .css( "font-weight", ( options.strong ) ? "bold" : "" )
             .appendTo( row );
+
+        $( options.strong ? "<strong>" : "<span>" )
+            .text( options.key )
+            .appendTo( td );
 
         var v = $( "<td class='value'>" )
             .appendTo( row );
