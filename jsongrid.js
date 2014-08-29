@@ -19,19 +19,17 @@
     var toggle = function ( ev ) {
         var target = $( ev.currentTarget );
         var span = +target.attr( "colspan" );
-        var next = target
-            .parents( "tr" )
-            .nextUntil( function () {
-                return span <= +$( this ).find( "> td.key" ).attr( "colspan" )
-            });
+        var row = target.parent( "tr" ).first();
+        var next = row.nextUntil( function () {
+            return span <= +$( this ).find( "> td.key" ).attr( "colspan" )
+        }).remove();
 
-        if ( next.first().is( ":visible" ) ) {
-            next.addClass( "hide" );
-        } else {
-            // only fade in the direct children of this row
-            next.filter( function () {
-                return span - 1 == +$( this ).find( "> td.key" ).attr( "colspan" )
-            }).removeClass( "hide" );
+        var data = row.data( "jsongrid" );
+        if ( !next.length && data && typeof data.obj[ data.key ] == "object" ) {
+            this.render_object( data.obj[ data.key ], { 
+                after: row, 
+                pad: data.pad + 1 
+            });
         }
     }
 
@@ -45,8 +43,8 @@
     var Grid = function( el, data, options ) {
         $.extend( this, options );
         this.el = $( el );
-        this.el.on( "click", ".key", toggle );
-        this.el.on( "change", "input", change );
+        this.el.on( "click", ".key", $.proxy( toggle, this ) );
+        this.el.on( "change", "input", $.proxy( change, this ) );
         this.data = data;
     };
 
@@ -83,29 +81,27 @@
 
     Grid.prototype.render_object = function ( obj, options ) {
         var pad = options.pad || ( options.pad = 0 );
-        for ( var prop in obj ) {
-            var v = obj[ prop ];
-            this.render_row({
-                key: prop,
+        var row = options.after;
+        var that = this;
+        Object.keys( obj ).forEach( function ( key ) {
+            row = that.render_row({
+                key: key,
                 obj: obj,
                 pad: pad,
-                strong: typeof v == "object"
+                after: row
             });
-
-            if ( typeof v == "object" ) {
-                this.render_object( v, { 
-                    pad: pad + 1, 
-                    key: prop 
-                });
-            }
-        }
+        });
     }
 
     Grid.prototype.render_row = function( options ) {
+        // console.log( options.after )
         var pad = options.pad;
         var row = $( "<tr>" )
-            .toggleClass( "hide", pad > 0 )
-            .appendTo( this.table );
+            .data( "jsongrid", { obj: options.obj, key: options.key, pad: pad } );
+
+        ( options.after ) 
+            ? row.insertAfter( options.after ) 
+            : row.appendTo( this.table );
 
         for ( var i = 0 ; i < pad ; i += 1 ) {
             $( "<td class='pad'>" ).appendTo( row );
@@ -115,18 +111,17 @@
             .attr( "colspan", this.depth - pad )
             .appendTo( row );
 
-        $( options.strong ? "<strong>" : "<span>" )
+        var value = options.obj ? options.obj[ options.key ] : undefined;
+        $( typeof value == "object" ? "<strong>" : "<span>" )
             .text( options.key )
             .appendTo( td );
 
         var v = $( "<td class='value'>" )
             .appendTo( row );
 
-        var value = options.obj ? options.obj[ options.key ] : undefined;
         if ( typeof value != "undefined" && typeof value != "object" ) {
             $( "<input type='text' />" )
                 .val( value )
-                .data( "jsongrid", { obj: options.obj, key: options.key } )
                 .appendTo( v );
         }
 
@@ -145,8 +140,6 @@
     };
 
     // default options
-    $.fn.jsongrid.defaults = {
-        Grid: Grid
-    };
+    $.fn.jsongrid.defaults = { Grid: Grid };
 
 }( jQuery ))
