@@ -76,12 +76,12 @@
             });
             pad += 1;
         }
+        
         for ( var prop in obj ) {
             var v = obj[ prop ];
             if ( typeof v == "object" ) {
                 this.render_object( v, { pad: pad, key: prop } );
             } else {
-                // console.log( prop, options.collapsed );
                 var row = this.render_row({
                     key: prop,
                     obj: obj,
