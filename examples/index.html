@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="../jsongrid.css?bust=109" rel="stylesheet" />
+        <link href="../jsongrid.css" rel="stylesheet" />
+        <link href="../panel.css" rel="stylesheet" />
         <style>
             body {
                 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 font-size: 14px;
             }
             .container {
-                width: 1170px;
+                width: 80%;
                 margin: 40px auto;
             }
         </style>
@@ -19,29 +20,38 @@
         <div class="three container"></div>
         <script src="jquery.js"></script>
         <script src="../jsongrid.js?bust=123sa124"></script>
+        <script src="../panel.js"></script>
         <script>
-            var d1, d2, d3;
-            $( "body div.one" ).jsongrid( d3 = {
-                "hello": "world",
-                "foo": [ 5, 3, 5, 7, { n : 13 } ]
-            }, { checkbox: false, title: "Settings" } );
-
-            $( "body div.two" ).jsongrid( d1 = {
-                "hello": "world",
-                "yes": "no",
-                "ok": "cookie",
-                "foo": { "bar": 1, "yes": "ok" }
-            }, { checkbox: false, title: false } );
-
-            $( "body div.three" ).jsongrid( d2 = {
-                "one": { "name": "Foo", "age": 30 },
-                "two": { "name": "Bar", "age": 28 },
-                "three": { "name": "Hello", "age": 27 },
-                "four": { "name": "World", "age": 19 }
-            }, {
-                title: "Users",
-                headers: [ "name", "age" ]
-            });
+        panel()
+            .data({
+                hello: 'world',
+                foo: 15,
+                bar: true,
+                list: ['alice', 100, [1, 2]]
+            })
+            .draw(document.querySelector('.one'))
+            // var d1, d2, d3;
+            // $( "body div.one" ).jsongrid( d3 = {
+            //     "hello": "world",
+            //     "foo": [ 5, 3, 5, 7, { n : 13 } ]
+            // }, { checkbox: false, title: "Settings" } );
+            //
+            // $( "body div.two" ).jsongrid( d1 = {
+            //     "hello": "world",
+            //     "yes": "no",
+            //     "ok": "cookie",
+            //     "foo": { "bar": 1, "yes": "ok" }
+            // }, { checkbox: false, title: false } );
+            //
+            // $( "body div.three" ).jsongrid( d2 = {
+            //     "one": { "name": "Foo", "age": 30 },
+            //     "two": { "name": "Bar", "age": 28 },
+            //     "three": { "name": "Hello", "age": 27 },
+            //     "four": { "name": "World", "age": 19 }
+            // }, {
+            //     title: "Users",
+            //     headers: [ "name", "age" ]
+            // });
         </script>
 
     </body>

@@ -1,0 +1,74 @@
+.panel {
+    border-bottom: 1px solid #ddd;
+}
+
+.panel .panel-hidden {
+    display: none;
+}
+
+.panel .panel-flex {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.panel .panel-grow {
+    flex-grow: 1
+}
+
+.panel section {
+    border-top: 1px solid #ddd;
+    width: 100%;
+}
+
+.panel section > header {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    color: #7f8c8d;
+    padding: 12px 12px 12px 0;
+}
+
+.panel .panel-nest {
+    border-left: 30px solid #f5f5f5;
+    padding-left: 10px;
+}
+
+.panel section > main {
+    flex: 1
+}
+
+.panel input {
+    display: block;
+    border: none;
+    outline: none;
+    background: none;
+    font-weight: normal;
+}
+
+.panel .panel-toggle {
+    width: 30px;
+    cursor: pointer;
+}
+
+.panel .panel-toggle:before {
+    border-style: solid;
+    border-width: 0.25em 0.25em 0 0;
+    content: '';
+    display: inline-block;
+    height: 0.45em;
+    left: 0.15em;
+    position: relative;
+    top: 0.15em;
+    color: #7f8c8d;
+    transform: rotate(45deg);
+    vertical-align: top;
+    width: 0.45em;
+
+    transition: transform .3s, top .3s;
+}
+
+.panel .panel-toggle.panel-open:before {
+    top: 0;
+    transform: rotate(135deg);
+}
