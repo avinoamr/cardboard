@@ -26,16 +26,16 @@
 
         var data = row.data( "jsongrid" );
         if ( !next.length && data && typeof data.obj[ data.key ] == "object" ) {
-            this.render_object( data.obj[ data.key ], { 
-                after: row, 
-                pad: data.pad + 1 
+            this.render_object( data.obj[ data.key ], {
+                after: row,
+                pad: data.pad + 1
             });
         }
     }
 
     var change = function ( ev ) {
         var target = $( ev.currentTarget );
-        var data = target.data( "jsongrid" );
+        var data = target.parents('tr').data( "jsongrid" );
         data.obj[ data.key ] = target.val();
     }
 
@@ -99,14 +99,14 @@
         var row = $( "<tr>" )
             .data( "jsongrid", { obj: options.obj, key: options.key, pad: pad } );
 
-        ( options.after ) 
-            ? row.insertAfter( options.after ) 
+        ( options.after )
+            ? row.insertAfter( options.after )
             : row.appendTo( this.table );
 
         for ( var i = 0 ; i < pad ; i += 1 ) {
             $( "<td class='pad'>" ).appendTo( row );
         }
-        
+
         var td = $( "<td class='key'>" )
             .attr( "colspan", this.depth - pad )
             .appendTo( row );
