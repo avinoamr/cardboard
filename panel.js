@@ -22,10 +22,10 @@
 
     Panel.prototype.draw = function(el) {
         el.classList.add('panel')
-        Panel._draw(el, this._schema, this._data)
+        draw(el, this._schema, this._data)
     }
 
-    Panel._draw = function(el, schema, data) {
+    function draw(el, schema, data) {
         if (!schema || !schema.type) {
             schema = Panel._autoSchema(data)
         }
@@ -34,13 +34,45 @@
             return
         }
 
-        var inputFn = Panel.inputs[schema.type] || Panel._drawString
-        inputFn(el, schema, data)
+        var inputFn = Panel.inputs[schema.type] || Panel.inputs.string
+        var inputs = inputFn(el, schema, data)
+        if (!inputs) {
+            return
+        }
+
+        inputs = Array.isArray(inputs) ? inputs : [ inputs ]
+        $(el).appendMany(inputs)
     }
 
-    Panel._drawObject = function(el, schema, data) {
+    function drawObject(el, schema, data) {
+        schema._nest = schema._nest || 0
+        if (!schema._nest) {
+            return drawObject.items(el, schema, data)
+        }
+
+        var expand = $('<div class="panel-toggle"></div>')
+        var summary = $('<div>' + Object.keys(data).length + ' items</div>')
+        var container = $('<div class="panel-full"></div>')
+
+        var items
+        expand.addEventListener('click', function() {
+            expand.classList.toggle('panel-open')
+            if (!items) {
+                items = drawObject.items(container, schema, data)
+                container.appendMany(items)
+            }
+
+            container.style.display = expand.classList.contains('panel-open')
+                ? '' : 'none'
+        })
+
+        return [expand, summary, container]
+    }
+
+    drawObject.items = function(el, schema, data) {
+        var nest = schema._nest
         var props = schema.properties
-        Object.keys(props).forEach(function (k) {
+        return Object.keys(props).map(function (k) {
             var prop = props[k]
             var section = $(`
                 <section class="panel-flex">
@@ -48,59 +80,80 @@
                 </section>
             `)
 
-            section.$$('header').innerHTML = prop.title || k
-            Panel._draw(section, prop, data[k])
-            el.appendChild(section)
+            var header = section.$$('header')
+            header.innerHTML = prop.title || k
+
+            if (nest > 0) {
+                header.classList.add('panel-nest')
+                header.style['border-left-width'] =
+                    (nest * 30) + 'px'
+            }
+
+            prop._nest = nest + 1
+            draw(section, prop, data[k])
+            return section
         })
     }
 
-    Panel._drawArray = function(el, schema, data) {
+    function drawArray(el, schema, data) {
+        schema._nest = schema._nest || 0
+        if (!schema._nest) {
+            return drawArray.items(el, schema, data)
+        }
+
         var expand = $('<div class="panel-toggle"></div>')
-        el.appendChild(expand)
+        var summary = $('<div>' + data.length + ' items</div>')
+        var container = $('<div class="panel-full"></div>')
 
-        var summary = $('<div class="panel-br">' + data.length + ' items</div>')
-        el.appendChild(summary)
+        var items
+        expand.addEventListener('click', function() {
+            expand.classList.toggle('panel-open')
+            if (!items) {
+                items = drawArray.items(container, schema, data)
+                container.appendMany(items)
+            }
 
-        var sections = data.map(function (item, idx) {
+            container.style.display = expand.classList.contains('panel-open')
+                ? '' : 'none'
+        })
+
+        return [expand, summary, container]
+    }
+
+    drawArray.items = function (el, schema, data) {
+        var nest = schema._nest
+        return data.map(function (item, idx) {
             var section = $(`
-                <section class="panel-flex" style="display: none">
-                    <header class="panel-nest"></header>
+                <section class="panel-flex">
+                    <header></header>
                 </section>
             `)
 
-            section.$$('header').innerHTML = idx
-            Panel._draw(section, schema.item, item)
-            el.appendChild(section)
+            var header = section.$$('header')
+            header.innerHTML = idx
+
+            if (nest > 0) {
+                header.classList.add('panel-nest')
+                header.style['border-left-width'] = (nest * 30) + 'px'
+            }
+
+            schema.item = schema.item || {}
+            schema.item._nest = nest + 1
+            draw(section, schema.item, item)
             return section
         })
-
-        expand.addEventListener('click', function() {
-            expand.classList.toggle('panel-open')
-            var display = expand.classList.contains('panel-open')
-                ? '' : 'none';
-
-            sections.forEach(function (section) {
-                section.style.display = display
-            })
-        })
     }
 
-    Panel._drawString = function(el, schema, data) {
-        var inp = $('<input type="text" class="panel-grow" />')
-        inp.value = data
-        el.appendChild(inp)
+    function drawString (el, schema, data) {
+        return $('<input type="text" class="panel-grow" />').setValue(data)
     }
 
-    Panel._drawNumber = function(el, schema, data) {
-        var inp = $('<input type="number" class="panel-grow" />')
-        inp.value = data
-        el.appendChild(inp)
+    function drawNumber (el, schema, data) {
+        return $('<input type="number" class="panel-grow" />').setValue(data)
     }
 
-    Panel._drawBoolean = function(el, schema, data) {
-        var inp = $('<input type="checkbox" />')
-        inp.value = data
-        el.appendChild(inp)
+    function drawBoolean(el, schema, data) {
+        return $('<input type="checkbox" />').setValue(data)
     }
 
     Panel._autoSchema = function(data) {
@@ -119,22 +172,33 @@
     }
 
     Panel.inputs = {
-        'object': Panel._drawObject,
-        'array': Panel._drawArray,
-        'string': Panel._drawString,
-        'number': Panel._drawNumber,
-        'boolean': Panel._drawBoolean,
-        'date-time': Panel._drawDateTime
+        'object': drawObject,
+        'array': drawArray,
+        'string': drawString,
+        'number': drawNumber,
+        'boolean': drawBoolean,
+        // 'date-time': drawDateTime
     }
 
     // create DOM element from an HTML string
-    function $(html, args) {
-        var tmp = document.createElement('div')
-        tmp.innerHTML = html
-        var el = tmp.children[0]
+    function $(el, args) {
+        if (typeof el === 'string') {
+            var tmp = document.createElement('div')
+            tmp.innerHTML = el
+            el = tmp.children[0]
+        }
 
         el.$$ = function(selector) {
             return el.querySelector(selector)
+        }
+        el.setValue = function(v) {
+            el.value = v
+            return el
+        }
+        el.appendMany = function(items) {
+            items || (items = [])
+            items = Array.isArray(items) ? items : [items]
+            items.forEach(el.appendChild.bind(el))
         }
         return el
     }

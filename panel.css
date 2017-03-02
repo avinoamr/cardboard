@@ -16,6 +16,10 @@
     flex-grow: 1
 }
 
+.panel .panel-full {
+    width: 100%;
+}
+
 .panel section {
     border-top: 1px solid #ddd;
     width: 100%;
@@ -32,10 +36,6 @@
 .panel .panel-nest {
     border-left: 30px solid #f5f5f5;
     padding-left: 10px;
-}
-
-.panel section > main {
-    flex: 1
 }
 
 .panel input {
