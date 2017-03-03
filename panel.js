@@ -23,6 +23,7 @@
     Panel.prototype.draw = function(el) {
         el.classList.add('panel')
         var inputs = draw(this._schema, this._data)
+        el.innerHTML = ''
         $(el).appendMany(inputs)
     }
 

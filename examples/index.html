@@ -9,19 +9,19 @@
             }
             .container {
                 width: 80%;
-                margin: 40px auto;
+                margin: 40px auto 0 auto;
             }
         </style>
     </head>
     <body>
-        <div class="one container"></div>
-        <div class="two container"></div>
-        <div class="three container"></div>
+        <div id="one" class="container"></div>
+        <div id="two" class="container"></div>
+
         <script src="../panel.js"></script>
         <script>
         panel()
             .data({
-                hello: 'world',
+                string: 'value',
                 number: 15,
                 bool: true,
                 object: {
@@ -33,7 +33,7 @@
                 },
                 list: ['alice', 100, [1, 2]]
             })
-            .draw(document.querySelector('.one'))
+            .draw(document.querySelector('#one'))
 
         panel()
             .data({ animal: 'Horse'})
@@ -54,29 +54,7 @@
                     }
                 }
             })
-            .draw(document.querySelector('.two'))
-            // var d1, d2, d3;
-            // $( "body div.one" ).jsongrid( d3 = {
-            //     "hello": "world",
-            //     "foo": [ 5, 3, 5, 7, { n : 13 } ]
-            // }, { checkbox: false, title: "Settings" } );
-            //
-            // $( "body div.two" ).jsongrid( d1 = {
-            //     "hello": "world",
-            //     "yes": "no",
-            //     "ok": "cookie",
-            //     "foo": { "bar": 1, "yes": "ok" }
-            // }, { checkbox: false, title: false } );
-            //
-            // $( "body div.three" ).jsongrid( d2 = {
-            //     "one": { "name": "Foo", "age": 30 },
-            //     "two": { "name": "Bar", "age": 28 },
-            //     "three": { "name": "Hello", "age": 27 },
-            //     "four": { "name": "World", "age": 19 }
-            // }, {
-            //     title: "Users",
-            //     headers: [ "name", "age" ]
-            // });
+            .draw(document.querySelector('#two'))
         </script>
 
     </body>
