@@ -52,7 +52,7 @@
         var container = $('<div class="panel-full"></div>')
 
         var items
-        expand.addEventListener('click', function() {
+        expand.on('click', function() {
             expand.classList.toggle('panel-open')
             if (!items) {
                 items = drawItems.inner(schema, data)
@@ -76,7 +76,7 @@
             `)
 
             var header = section.$$('header')
-            header.innerHTML = item.title
+            header.innerHTML = schema.title || item.k
 
             if (nest > 0) {
                 header.classList.add('panel-nest')
@@ -85,7 +85,7 @@
             }
 
             item.schema._nest = nest + 1
-            return section.appendMany(draw(item.schema, item.data))
+            return section.appendMany(draw(item.schema, item.v))
         })
     }
 
@@ -95,8 +95,8 @@
             var prop = props[k]
             return {
                 schema: prop,
-                title: prop.title || k,
-                data: data[k]
+                k: k,
+                v: data[k]
             }
         })
 
@@ -107,8 +107,8 @@
         var items = data.map(function(d, idx) {
             return {
                 schema: schema.item || {},
-                title: idx,
-                data: d
+                k: idx,
+                v: d
             }
         })
 
@@ -162,6 +162,7 @@
         el.$$ = function(selector) {
             return el.querySelector(selector)
         }
+        el.on = el.addEventListener
         el.setValue = function(v) {
             el.value = v
             return el
