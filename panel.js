@@ -35,7 +35,7 @@
         }
 
         var inputFn = Panel.inputs[schema.type] || Panel.inputs.string
-        var inputs = inputFn(el, schema, data)
+        var inputs = inputFn(schema, data)
         if (!inputs) {
             return
         }
@@ -44,10 +44,10 @@
         $(el).appendMany(inputs)
     }
 
-    function drawObject(el, schema, data) {
+    function drawObject(schema, data) {
         schema._nest = schema._nest || 0
         if (!schema._nest) {
-            return drawObject.items(el, schema, data)
+            return drawObject.items(schema, data)
         }
 
         var expand = $('<div class="panel-toggle"></div>')
@@ -58,7 +58,7 @@
         expand.addEventListener('click', function() {
             expand.classList.toggle('panel-open')
             if (!items) {
-                items = drawObject.items(container, schema, data)
+                items = drawObject.items(schema, data)
                 container.appendMany(items)
             }
 
@@ -69,7 +69,7 @@
         return [expand, summary, container]
     }
 
-    drawObject.items = function(el, schema, data) {
+    drawObject.items = function(schema, data) {
         var nest = schema._nest
         var props = schema.properties
         return Object.keys(props).map(function (k) {
@@ -95,10 +95,10 @@
         })
     }
 
-    function drawArray(el, schema, data) {
+    function drawArray(schema, data) {
         schema._nest = schema._nest || 0
         if (!schema._nest) {
-            return drawArray.items(el, schema, data)
+            return drawArray.items(schema, data)
         }
 
         var expand = $('<div class="panel-toggle"></div>')
@@ -109,7 +109,7 @@
         expand.addEventListener('click', function() {
             expand.classList.toggle('panel-open')
             if (!items) {
-                items = drawArray.items(container, schema, data)
+                items = drawArray.items(schema, data)
                 container.appendMany(items)
             }
 
@@ -120,7 +120,7 @@
         return [expand, summary, container]
     }
 
-    drawArray.items = function (el, schema, data) {
+    drawArray.items = function (schema, data) {
         var nest = schema._nest
         return data.map(function (item, idx) {
             var section = $(`
@@ -144,15 +144,15 @@
         })
     }
 
-    function drawString (el, schema, data) {
+    function drawString (schema, data) {
         return $('<input type="text" class="panel-grow" />').setValue(data)
     }
 
-    function drawNumber (el, schema, data) {
+    function drawNumber (schema, data) {
         return $('<input type="number" class="panel-grow" />').setValue(data)
     }
 
-    function drawBoolean(el, schema, data) {
+    function drawBoolean(schema, data) {
         return $('<input type="checkbox" />').setValue(data)
     }
 
