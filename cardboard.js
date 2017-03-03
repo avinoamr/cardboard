@@ -1,29 +1,29 @@
 (function(exports){
-    var origForm = exports.form
+    var conflict = exports.cardboard
 
-    exports.form = form
-    form.Form = Form
+    exports.cardboard = cardboard
+    cardboard.Cardboard = Cardboard
 
-    function form() {
-        return new Form()
+    function cardboard() {
+        return new Cardboard()
     }
 
-    function Form() {
+    function Cardboard() {
         this._data = {}
     }
 
-    Form.prototype.data = function(data) {
+    Cardboard.prototype.data = function(data) {
         this._data = data
         return this
     }
 
-    Form.prototype.schema = function(schema) {
+    Cardboard.prototype.schema = function(schema) {
         this._schema = schema
         return this
     }
 
-    Form.prototype.draw = function(el) {
-        el.classList.add('formjs')
+    Cardboard.prototype.draw = function(el) {
+        el.classList.add('cardboard')
         var inputs = draw(this._schema, this._data)
         el.innerHTML = ''
         $(el).appendMany(inputs)
@@ -32,7 +32,7 @@
     function draw(schema, data) {
         if (!schema || !schema.type) {
             var nest = (schema || {})._nest || 0
-            schema = Form._autoSchema(data)
+            schema = Cardboard._autoSchema(data)
             schema._nest = nest
         }
 
@@ -40,7 +40,7 @@
             return
         }
 
-        var inputFn = Form.inputs[schema.type] || Form.inputs.string
+        var inputFn = Cardboard.inputs[schema.type] || Cardboard.inputs.string
         return inputFn(schema, data)
     }
 
@@ -50,18 +50,18 @@
             return drawItems.inner(schema, data)
         }
 
-        var expand = $('<div class="formjs-toggle">' + data.length + ' items</div>')
-        var container = $('<div class="formjs-full"></div>')
+        var expand = $('<div class="cardboard-toggle">' + data.length + ' items</div>')
+        var container = $('<div class="cardboard-full"></div>')
 
         var items
         expand.on('click', function() {
-            expand.classList.toggle('formjs-open')
+            expand.classList.toggle('cardboard-open')
             if (!items) {
                 items = drawItems.inner(schema, data)
                 container.appendMany(items)
             }
 
-            container.style.display = expand.classList.contains('formjs-open')
+            container.style.display = expand.classList.contains('cardboard-open')
                 ? '' : 'none'
         })
 
@@ -73,7 +73,7 @@
         var headers = []
         var sections = items.map(function (item) {
             var section = $(`
-                <section class="formjs-flex">
+                <section class="cardboard-flex">
                     <header></header>
                 </section>
             `)
@@ -83,7 +83,7 @@
             headers.push(header)
 
             if (nest > 0) {
-                header.classList.add('formjs-nest')
+                header.classList.add('cardboard-nest')
                 header.style['border-left-width'] =
                     (nest * 30) + 'px'
             }
@@ -135,7 +135,7 @@
     function drawString (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="text" class="formjs-grow" />')
+            : $('<input type="text" class="cardboard-grow" />')
                 .attr('value', data || schema.default || '')
                 .attr('placeholder', schema.placeholder || '')
     }
@@ -143,7 +143,7 @@
     function drawNumber (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="number" class="formjs-grow" />')
+            : $('<input type="number" class="cardboard-grow" />')
                 .attr('value', data || schema.default || 0)
                 .attr('placeholder', schema.placeholder || '')
     }
@@ -153,7 +153,7 @@
             .attr('checked', data)
     }
 
-    Form._autoSchema = function(data) {
+    Cardboard._autoSchema = function(data) {
         var schema = {
             type: Array.isArray(data) ? 'array' : typeof data
         }
@@ -161,14 +161,14 @@
         if (schema.type === 'object') {
             schema.properties = {}
             Object.keys(data).forEach(function (k) {
-                schema.properties[k] = Form._autoSchema(data[k])
+                schema.properties[k] = Cardboard._autoSchema(data[k])
             })
         }
 
         return schema
     }
 
-    Form.inputs = {
+    Cardboard.inputs = {
         'object': drawObject,
         'array': drawArray,
         'string': drawString,

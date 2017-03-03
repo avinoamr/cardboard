@@ -1,31 +1,31 @@
-.formjs {
+.cardboard {
     border-bottom: 1px solid #ddd;
 }
 
-.formjs .formjs-hidden {
+.cardboard .cardboard-hidden {
     display: none;
 }
 
-.formjs .formjs-flex {
+.cardboard .cardboard-flex {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.formjs .formjs-grow {
+.cardboard .cardboard-grow {
     flex-grow: 1
 }
 
-.formjs .formjs-full {
+.cardboard .cardboard-full {
     width: 100%;
 }
 
-.formjs section {
+.cardboard section {
     border-top: 1px solid #ddd;
     width: 100%;
 }
 
-.formjs section > header {
+.cardboard section > header {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 12px;
@@ -33,13 +33,13 @@
     padding: 12px 12px 12px 0;
 }
 
-.formjs .formjs-nest {
+.cardboard .cardboard-nest {
     box-sizing: border-box;
     border-left: 30px solid #f5f5f5;
     padding-left: 10px;
 }
 
-.formjs input {
+.cardboard input {
     display: block;
     border: none;
     outline: none;
@@ -47,11 +47,11 @@
     font-weight: normal;
 }
 
-.formjs .formjs-toggle {
+.cardboard .cardboard-toggle {
     cursor: pointer;
 }
 
-.formjs .formjs-toggle:before {
+.cardboard .cardboard-toggle:before {
     content: '';
     position: relative;
     vertical-align: top;
@@ -70,7 +70,7 @@
     transition: transform .3s, top .3s;
 }
 
-.formjs .formjs-toggle.formjs-open:before {
+.cardboard .cardboard-toggle.cardboard-open:before {
     top: 0;
     transform: rotate(135deg);
 }

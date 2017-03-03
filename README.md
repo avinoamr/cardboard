@@ -1,37 +1,37 @@
-formjs
+cardboard
 ========
 
 Minimalistic, portable, style-able forms for JSON schemas and javascript objects.
 
-[Demo](http://htmlpreview.github.io/?https://github.com/avinoamr/jsongrid/blob/master/examples/index.html)
+[Demo](http://htmlpreview.github.io/?https://github.com/avinoamr/cardboard/blob/master/example/index.html)
 
 ## Key Features
 1. Stand-alone & independent from other libraries like jQuery, Angular or
 Bootstrap
-2. Tiny, minimalistic. (??)
+2. Tiny, minimalistic.
 3. Styleable to fit your UI design
 4. JSON schema extended with arbitrary controls and types
 
 ## Usage
 
 ```
-$ bower install form
+$ bower install cardboard
 ```
 
 ```html
-<script src="form.js" />
-<link href="form.css" ?>
+<script src="cardboard.js" />
+<link href="cardboard.css" ?>
 ```
 
 ```js
-form()
+cardboard()
     .data({ // implicit schema; inferred from the data
         hello: 'world',
         foo: 'bar'
     })
     .draw(document.body)
 
-form()
+cardboard()
     .data({})
     .schema({ // explicit JSON-schema
         type: 'object',

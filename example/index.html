@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="../panel.css" rel="stylesheet" />
+        <link href="../cardboard.css" rel="stylesheet" />
         <style>
             body {
                 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -17,9 +17,9 @@
         <div id="one" class="container"></div>
         <div id="two" class="container"></div>
 
-        <script src="../panel.js"></script>
+        <script src="../cardboard.js"></script>
         <script>
-        form()
+        cardboard()
             .data({
                 string: 'value',
                 number: 15,
@@ -35,7 +35,7 @@
             })
             .draw(document.querySelector('#one'))
 
-        form()
+        cardboard()
             .data({ animal: 'Horse'})
             .schema({
                 type: 'object',
