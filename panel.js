@@ -66,11 +66,9 @@
         return [expand, summary, container]
     }
 
-    drawObject.items = function(schema, data) {
+    function drawItems(schema, items) {
         var nest = schema._nest
-        var props = schema.properties
-        return Object.keys(props).map(function (k) {
-            var prop = props[k]
+        return items.map(function (item) {
             var section = $(`
                 <section class="panel-flex">
                     <header></header>
@@ -78,7 +76,7 @@
             `)
 
             var header = section.$$('header')
-            header.innerHTML = prop.title || k
+            header.innerHTML = item.title
 
             if (nest > 0) {
                 header.classList.add('panel-nest')
@@ -86,9 +84,23 @@
                     (nest * 30) + 'px'
             }
 
-            prop._nest = nest + 1
-            return section.appendMany(draw(prop, data[k]))
+            item.schema._nest = nest + 1
+            return section.appendMany(draw(item.schema, item.data))
         })
+    }
+
+    drawObject.items = function(schema, data) {
+        var props = schema.properties
+        var items = Object.keys(props).map(function(k) {
+            var prop = props[k]
+            return {
+                schema: prop,
+                title: prop.title || k,
+                data: data[k]
+            }
+        })
+
+        return drawItems(schema, items)
     }
 
     function drawArray(schema, data) {
@@ -117,26 +129,15 @@
     }
 
     drawArray.items = function (schema, data) {
-        var nest = schema._nest
-        return data.map(function (item, idx) {
-            var section = $(`
-                <section class="panel-flex">
-                    <header></header>
-                </section>
-            `)
-
-            var header = section.$$('header')
-            header.innerHTML = idx
-
-            if (nest > 0) {
-                header.classList.add('panel-nest')
-                header.style['border-left-width'] = (nest * 30) + 'px'
+        var items = data.map(function(d, idx) {
+            return {
+                schema: schema.item || {},
+                title: idx,
+                data: d
             }
-
-            schema.item = schema.item || {}
-            schema.item._nest = nest + 1
-            return section.appendMany(draw(schema.item, item))
         })
+
+        return drawItems(schema, items)
     }
 
     function drawString (schema, data) {
