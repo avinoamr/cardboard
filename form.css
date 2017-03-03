@@ -1,31 +1,31 @@
-.panel {
+.formjs {
     border-bottom: 1px solid #ddd;
 }
 
-.panel .panel-hidden {
+.formjs .formjs-hidden {
     display: none;
 }
 
-.panel .panel-flex {
+.formjs .formjs-flex {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.panel .panel-grow {
+.formjs .formjs-grow {
     flex-grow: 1
 }
 
-.panel .panel-full {
+.formjs .formjs-full {
     width: 100%;
 }
 
-.panel section {
+.formjs section {
     border-top: 1px solid #ddd;
     width: 100%;
 }
 
-.panel section > header {
+.formjs section > header {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 12px;
@@ -33,13 +33,13 @@
     padding: 12px 12px 12px 0;
 }
 
-.panel .panel-nest {
+.formjs .formjs-nest {
     box-sizing: border-box;
     border-left: 30px solid #f5f5f5;
     padding-left: 10px;
 }
 
-.panel input {
+.formjs input {
     display: block;
     border: none;
     outline: none;
@@ -47,11 +47,11 @@
     font-weight: normal;
 }
 
-.panel .panel-toggle {
+.formjs .formjs-toggle {
     cursor: pointer;
 }
 
-.panel .panel-toggle:before {
+.formjs .formjs-toggle:before {
     content: '';
     position: relative;
     vertical-align: top;
@@ -70,7 +70,7 @@
     transition: transform .3s, top .3s;
 }
 
-.panel .panel-toggle.panel-open:before {
+.formjs .formjs-toggle.formjs-open:before {
     top: 0;
     transform: rotate(135deg);
 }

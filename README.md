@@ -1,4 +1,4 @@
-jsongrid
+formjs
 ========
 
 Minimalistic, portable, style-able forms for JSON schemas and javascript objects.
@@ -6,8 +6,8 @@ Minimalistic, portable, style-able forms for JSON schemas and javascript objects
 [Demo](http://htmlpreview.github.io/?https://github.com/avinoamr/jsongrid/blob/master/examples/index.html)
 
 ## Key Features
-1. Completely independent of other libraries - Angular, Bootstrap, jQuery, etc.
-not required. (Free)
+1. Stand-alone & independent from other libraries like jQuery, Angular or
+Bootstrap
 2. Tiny, minimalistic. (??)
 3. Styleable to fit your UI design
 4. JSON schema extended with arbitrary controls and types
@@ -15,23 +15,23 @@ not required. (Free)
 ## Usage
 
 ```
-$ bower install jsongrid
+$ bower install form
 ```
 
 ```html
-<script src="jsongrid.js" />
-<link href="jsongrid.css" ?>
+<script src="form.js" />
+<link href="form.css" ?>
 ```
 
 ```js
-jsongrid()
+form()
     .data({ // implicit schema; inferred from the data
         hello: 'world',
         foo: 'bar'
     })
     .draw(document.body)
 
-jsongrid()
+form()
     .data({})
     .schema({ // explicit JSON-schema
         type: 'object',

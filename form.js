@@ -1,27 +1,29 @@
 (function(exports){
-    exports.panel = panel
-    panel.Panel = Panel
+    var origForm = exports.form
 
-    function panel() {
-        return new Panel()
+    exports.form = form
+    form.Form = Form
+
+    function form() {
+        return new Form()
     }
 
-    function Panel() {
+    function Form() {
         this._data = {}
     }
 
-    Panel.prototype.data = function(data) {
+    Form.prototype.data = function(data) {
         this._data = data
         return this
     }
 
-    Panel.prototype.schema = function(schema) {
+    Form.prototype.schema = function(schema) {
         this._schema = schema
         return this
     }
 
-    Panel.prototype.draw = function(el) {
-        el.classList.add('panel')
+    Form.prototype.draw = function(el) {
+        el.classList.add('formjs')
         var inputs = draw(this._schema, this._data)
         el.innerHTML = ''
         $(el).appendMany(inputs)
@@ -30,7 +32,7 @@
     function draw(schema, data) {
         if (!schema || !schema.type) {
             var nest = (schema || {})._nest || 0
-            schema = Panel._autoSchema(data)
+            schema = Form._autoSchema(data)
             schema._nest = nest
         }
 
@@ -38,7 +40,7 @@
             return
         }
 
-        var inputFn = Panel.inputs[schema.type] || Panel.inputs.string
+        var inputFn = Form.inputs[schema.type] || Form.inputs.string
         return inputFn(schema, data)
     }
 
@@ -48,18 +50,18 @@
             return drawItems.inner(schema, data)
         }
 
-        var expand = $('<div class="panel-toggle">' + data.length + ' items</div>')
-        var container = $('<div class="panel-full"></div>')
+        var expand = $('<div class="formjs-toggle">' + data.length + ' items</div>')
+        var container = $('<div class="formjs-full"></div>')
 
         var items
         expand.on('click', function() {
-            expand.classList.toggle('panel-open')
+            expand.classList.toggle('formjs-open')
             if (!items) {
                 items = drawItems.inner(schema, data)
                 container.appendMany(items)
             }
 
-            container.style.display = expand.classList.contains('panel-open')
+            container.style.display = expand.classList.contains('formjs-open')
                 ? '' : 'none'
         })
 
@@ -71,7 +73,7 @@
         var headers = []
         var sections = items.map(function (item) {
             var section = $(`
-                <section class="panel-flex">
+                <section class="formjs-flex">
                     <header></header>
                 </section>
             `)
@@ -81,7 +83,7 @@
             headers.push(header)
 
             if (nest > 0) {
-                header.classList.add('panel-nest')
+                header.classList.add('formjs-nest')
                 header.style['border-left-width'] =
                     (nest * 30) + 'px'
             }
@@ -133,7 +135,7 @@
     function drawString (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="text" class="panel-grow" />')
+            : $('<input type="text" class="formjs-grow" />')
                 .attr('value', data || schema.default || '')
                 .attr('placeholder', schema.placeholder || '')
     }
@@ -141,7 +143,7 @@
     function drawNumber (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="number" class="panel-grow" />')
+            : $('<input type="number" class="formjs-grow" />')
                 .attr('value', data || schema.default || 0)
                 .attr('placeholder', schema.placeholder || '')
     }
@@ -151,7 +153,7 @@
             .attr('checked', data)
     }
 
-    Panel._autoSchema = function(data) {
+    Form._autoSchema = function(data) {
         var schema = {
             type: Array.isArray(data) ? 'array' : typeof data
         }
@@ -159,14 +161,14 @@
         if (schema.type === 'object') {
             schema.properties = {}
             Object.keys(data).forEach(function (k) {
-                schema.properties[k] = Panel._autoSchema(data[k])
+                schema.properties[k] = Form._autoSchema(data[k])
             })
         }
 
         return schema
     }
 
-    Panel.inputs = {
+    Form.inputs = {
         'object': drawObject,
         'array': drawArray,
         'string': drawString,
