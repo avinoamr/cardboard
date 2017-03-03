@@ -41,21 +41,21 @@
         return inputFn(schema, data)
     }
 
-    function drawObject(schema, data) {
+    function drawItems(schema, data) {
         schema._nest = schema._nest || 0
         if (!schema._nest) {
-            return drawObject.items(schema, data)
+            return drawItems.inner(schema, data)
         }
 
         var expand = $('<div class="panel-toggle"></div>')
-        var summary = $('<div>' + Object.keys(data).length + ' items</div>')
+        var summary = $('<div>' + data.length + ' items</div>')
         var container = $('<div class="panel-full"></div>')
 
         var items
         expand.addEventListener('click', function() {
             expand.classList.toggle('panel-open')
             if (!items) {
-                items = drawObject.items(schema, data)
+                items = drawItems.inner(schema, data)
                 container.appendMany(items)
             }
 
@@ -66,7 +66,7 @@
         return [expand, summary, container]
     }
 
-    function drawItems(schema, items) {
+    drawItems.inner = function(schema, items) {
         var nest = schema._nest
         return items.map(function (item) {
             var section = $(`
@@ -89,7 +89,7 @@
         })
     }
 
-    drawObject.items = function(schema, data) {
+    function drawObject(schema, data) {
         var props = schema.properties
         var items = Object.keys(props).map(function(k) {
             var prop = props[k]
@@ -104,31 +104,6 @@
     }
 
     function drawArray(schema, data) {
-        schema._nest = schema._nest || 0
-        if (!schema._nest) {
-            return drawArray.items(schema, data)
-        }
-
-        var expand = $('<div class="panel-toggle"></div>')
-        var summary = $('<div>' + data.length + ' items</div>')
-        var container = $('<div class="panel-full"></div>')
-
-        var items
-        expand.addEventListener('click', function() {
-            expand.classList.toggle('panel-open')
-            if (!items) {
-                items = drawArray.items(schema, data)
-                container.appendMany(items)
-            }
-
-            container.style.display = expand.classList.contains('panel-open')
-                ? '' : 'none'
-        })
-
-        return [expand, summary, container]
-    }
-
-    drawArray.items = function (schema, data) {
         var items = data.map(function(d, idx) {
             return {
                 schema: schema.item || {},
