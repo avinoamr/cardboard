@@ -107,16 +107,16 @@
     }
 
     function drawObject(schema, data) {
-        var props = schema.properties
+        var props = schema.properties || {}
         var items = Object.keys(props).map(function(k) {
-            return { schema: props[k], k: k, v: data[k] }
+            return { schema: props[k], k: k, v: (data || {})[k] }
         })
 
         return drawItems(schema, items)
     }
 
     function drawArray(schema, data) {
-        var items = data.map(function(d, idx) {
+        var items = (data || []).map(function(d, idx) {
             return { schema: schema.item || {}, k: idx, v: d }
         })
 
@@ -138,6 +138,7 @@
             : $('<input type="text" class="cardboard-grow" />')
                 .attr('value', data || schema.default || '')
                 .attr('placeholder', schema.placeholder || '')
+                .attr('disabled', schema.readOnly)
     }
 
     function drawNumber (schema, data) {
@@ -146,11 +147,13 @@
             : $('<input type="number" class="cardboard-grow" />')
                 .attr('value', data || schema.default || 0)
                 .attr('placeholder', schema.placeholder || '')
+                .attr('disabled', schema.readOnly)
     }
 
     function drawBoolean(schema, data) {
         return $('<input type="checkbox" />')
             .attr('checked', data)
+            .attr('disabled', schema.readOnly)
     }
 
     Cardboard._autoSchema = function(data) {
@@ -177,6 +180,12 @@
         // 'date-time': drawDateTime
     }
 
+    // aliases for native javascript objects
+    Cardboard.inputs[Array] = Cardboard.inputs['array']
+    Cardboard.inputs[Object] = Cardboard.inputs['object']
+    Cardboard.inputs[String] = Cardboard.inputs['string']
+    Cardboard.inputs[Number] = Cardboard.inputs['number']
+
     // create DOM element from an HTML string
     function $(el, args) {
         if (typeof el === 'string') {
@@ -189,7 +198,7 @@
             return $(el.querySelector(selector))
         }
         el.attr = function(k, v) {
-            v === false
+            !v
                 ? el.removeAttribute(k)
                 : el.setAttribute(k, v)
             return el
