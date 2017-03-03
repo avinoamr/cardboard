@@ -1,0 +1,22 @@
+{
+  "name": "form",
+  "main": "form.js",
+  "homepage": "https://github.com/avinoamr/form",
+  "authors": [
+    "Roi Avinoam <avinoamr@gmail.com>"
+  ],
+  "description": "Minimalistic, portable, style-able forms for JSON schemas and javascript objects",
+  "keywords": [
+    "form",
+    "json",
+    "schema"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
