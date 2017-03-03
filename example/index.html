@@ -42,7 +42,7 @@
                 properties: {
                     animal: {
                         type: 'string',
-                        enum: ['Dog', 'Cat', 'Horse', 'Snake']
+                        enum: ['Dog', 'Cat', 'Horse', 'Snake'],
                     },
                     name: {
                         type: 'string',
@@ -50,7 +50,8 @@
                     },
                     age: {
                         type: 'number',
-                        default: 8
+                        default: 8,
+                        readOnly: true
                     }
                 }
             })

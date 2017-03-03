@@ -132,28 +132,29 @@
         }, $('<select></select>'))
     }
 
-    function drawString (schema, data) {
+    function drawInput(format, schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="text" class="cardboard-grow" />')
+                .attr('disabled', schema.readOnly)
+                
+            : $('<input class="cardboard-grow" />')
+                .attr('type', format || 'text')
                 .attr('value', data || schema.default || '')
                 .attr('placeholder', schema.placeholder || '')
                 .attr('disabled', schema.readOnly)
     }
 
+    function drawString (schema, data) {
+        return drawInput(schema.format || 'text', schema, data)
+    }
+
     function drawNumber (schema, data) {
-        return schema.enum
-            ? drawEnum(schema, data)
-            : $('<input type="number" class="cardboard-grow" />')
-                .attr('value', data || schema.default || 0)
-                .attr('placeholder', schema.placeholder || '')
-                .attr('disabled', schema.readOnly)
+        return drawInput('number', schema, data)
     }
 
     function drawBoolean(schema, data) {
-        return $('<input type="checkbox" />')
+        return drawInput('checkbox', schema, data)
             .attr('checked', data)
-            .attr('disabled', schema.readOnly)
     }
 
     Cardboard._autoSchema = function(data) {
