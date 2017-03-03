@@ -105,12 +105,25 @@
         return drawItems(schema, items)
     }
 
+    function drawEnum(schema, data) {
+        return schema.enum.reduce(function (select, item) {
+            var option = $('<option>' + item + '</option>')
+                .attr('selected', item == data)
+
+            return select.appendMany(option)
+        }, $('<select></select>'))
+    }
+
     function drawString (schema, data) {
-        return $('<input type="text" class="panel-grow" />').setValue(data)
+        return schema.enum
+            ? drawEnum(schema, data)
+            : $('<input type="text" class="panel-grow" />').setValue(data)
     }
 
     function drawNumber (schema, data) {
-        return $('<input type="number" class="panel-grow" />').setValue(data)
+        return schema.enum
+            ? drawEnum(schema, data)
+            : $('<input type="number" class="panel-grow" />').setValue(data)
     }
 
     function drawBoolean(schema, data) {
@@ -155,6 +168,12 @@
         el.on = el.addEventListener
         el.setValue = function(v) {
             el.value = v
+            return el
+        }
+        el.attr = function(k, v) {
+            v === false
+                ? el.removeAttribute(k)
+                : el.setAttribute(k, v)
             return el
         }
         el.appendMany = function(items) {

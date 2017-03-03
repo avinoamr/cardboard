@@ -34,6 +34,19 @@
                 list: ['alice', 100, [1, 2]]
             })
             .draw(document.querySelector('.one'))
+
+        panel()
+            .data({ animal: 'Horse'})
+            .schema({
+                type: 'object',
+                properties: {
+                    animal: {
+                        type: 'string',
+                        enum: ['Dog', 'Cat', 'Horse', 'Snake']
+                    }
+                }
+            })
+            .draw(document.querySelector('.two'))
             // var d1, d2, d3;
             // $( "body div.one" ).jsongrid( d3 = {
             //     "hello": "world",
