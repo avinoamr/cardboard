@@ -92,12 +92,7 @@
     function drawObject(schema, data) {
         var props = schema.properties
         var items = Object.keys(props).map(function(k) {
-            var prop = props[k]
-            return {
-                schema: prop,
-                k: k,
-                v: data[k]
-            }
+            return { schema: props[k], k: k, v: data[k] }
         })
 
         return drawItems(schema, items)
@@ -105,11 +100,7 @@
 
     function drawArray(schema, data) {
         var items = data.map(function(d, idx) {
-            return {
-                schema: schema.item || {},
-                k: idx,
-                v: d
-            }
+            return { schema: schema.item || {}, k: idx, v: d }
         })
 
         return drawItems(schema, items)
