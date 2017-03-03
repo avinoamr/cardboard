@@ -119,6 +119,7 @@
             ? drawEnum(schema, data)
             : $('<input type="text" class="panel-grow" />')
                 .attr('value', data || schema.default || '')
+                .attr('placeholder', schema.placeholder || '')
     }
 
     function drawNumber (schema, data) {
@@ -126,6 +127,7 @@
             ? drawEnum(schema, data)
             : $('<input type="number" class="panel-grow" />')
                 .attr('value', data || schema.default || 0)
+                .attr('placeholder', schema.placeholder || '')
     }
 
     function drawBoolean(schema, data) {
