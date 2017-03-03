@@ -47,8 +47,7 @@
             return drawItems.inner(schema, data)
         }
 
-        var expand = $('<div class="panel-toggle"></div>')
-        var summary = $('<div>' + data.length + ' items</div>')
+        var expand = $('<div class="panel-toggle">' + data.length + ' items</div>')
         var container = $('<div class="panel-full"></div>')
 
         var items
@@ -63,7 +62,7 @@
                 ? '' : 'none'
         })
 
-        return [expand, summary, container]
+        return [expand, container]
     }
 
     drawItems.inner = function(schema, items) {

@@ -47,24 +47,25 @@
 }
 
 .panel .panel-toggle {
-    width: 30px;
     cursor: pointer;
 }
 
 .panel .panel-toggle:before {
+    content: '';
+    position: relative;
+    vertical-align: top;
+    top: 0.15em;
+    left: 0.15em;
+
+    display: inline-block;
+    margin-right: 1em;
+    width: 0.45em;
+    height: 0.45em;
+
     border-style: solid;
     border-width: 0.25em 0.25em 0 0;
-    content: '';
-    display: inline-block;
-    height: 0.45em;
-    left: 0.15em;
-    position: relative;
-    top: 0.15em;
-    color: #7f8c8d;
+    border-color: #7f8c8d;
     transform: rotate(45deg);
-    vertical-align: top;
-    width: 0.45em;
-
     transition: transform .3s, top .3s;
 }
 
