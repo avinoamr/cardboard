@@ -117,17 +117,20 @@
     function drawString (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="text" class="panel-grow" />').setValue(data)
+            : $('<input type="text" class="panel-grow" />')
+                .attr('value', data || schema.default || '')
     }
 
     function drawNumber (schema, data) {
         return schema.enum
             ? drawEnum(schema, data)
-            : $('<input type="number" class="panel-grow" />').setValue(data)
+            : $('<input type="number" class="panel-grow" />')
+                .attr('value', data || schema.default || 0)
     }
 
     function drawBoolean(schema, data) {
-        return $('<input type="checkbox" />').setValue(data)
+        return $('<input type="checkbox" />')
+            .attr('checked', data)
     }
 
     Panel._autoSchema = function(data) {
@@ -165,11 +168,6 @@
         el.$$ = function(selector) {
             return el.querySelector(selector)
         }
-        el.on = el.addEventListener
-        el.setValue = function(v) {
-            el.value = v
-            return el
-        }
         el.attr = function(k, v) {
             v === false
                 ? el.removeAttribute(k)
@@ -182,6 +180,7 @@
             items.forEach(el.appendChild.bind(el))
             return el
         }
+        el.on = el.addEventListener
         return el
     }
 })(window)
