@@ -22,12 +22,15 @@
 
     Panel.prototype.draw = function(el) {
         el.classList.add('panel')
-        draw(el, this._schema, this._data)
+        var inputs = draw(this._schema, this._data)
+        $(el).appendMany(inputs)
     }
 
-    function draw(el, schema, data) {
+    function draw(schema, data) {
         if (!schema || !schema.type) {
+            var nest = (schema || {})._nest || 0
             schema = Panel._autoSchema(data)
+            schema._nest = nest
         }
 
         if (schema.hidden) {
@@ -35,13 +38,7 @@
         }
 
         var inputFn = Panel.inputs[schema.type] || Panel.inputs.string
-        var inputs = inputFn(schema, data)
-        if (!inputs) {
-            return
-        }
-
-        inputs = Array.isArray(inputs) ? inputs : [ inputs ]
-        $(el).appendMany(inputs)
+        return inputFn(schema, data)
     }
 
     function drawObject(schema, data) {
@@ -90,8 +87,7 @@
             }
 
             prop._nest = nest + 1
-            draw(section, prop, data[k])
-            return section
+            return section.appendMany(draw(prop, data[k]))
         })
     }
 
@@ -139,8 +135,7 @@
 
             schema.item = schema.item || {}
             schema.item._nest = nest + 1
-            draw(section, schema.item, item)
-            return section
+            return section.appendMany(draw(schema.item, item))
         })
     }
 
@@ -199,6 +194,7 @@
             items || (items = [])
             items = Array.isArray(items) ? items : [items]
             items.forEach(el.appendChild.bind(el))
+            return el
         }
         return el
     }
