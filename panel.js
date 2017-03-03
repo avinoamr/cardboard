@@ -168,7 +168,7 @@
         }
 
         el.$$ = function(selector) {
-            return el.querySelector(selector)
+            return $(el.querySelector(selector))
         }
         el.attr = function(k, v) {
             v === false
