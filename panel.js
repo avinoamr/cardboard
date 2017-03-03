@@ -67,7 +67,8 @@
 
     drawItems.inner = function(schema, items) {
         var nest = schema._nest
-        return items.map(function (item) {
+        var headers = []
+        var sections = items.map(function (item) {
             var section = $(`
                 <section class="panel-flex">
                     <header></header>
@@ -76,6 +77,7 @@
 
             var header = section.$$('header')
             header.innerHTML = schema.title || item.k
+            headers.push(header)
 
             if (nest > 0) {
                 header.classList.add('panel-nest')
@@ -86,6 +88,19 @@
             item.schema._nest = nest + 1
             return section.appendMany(draw(item.schema, item.v))
         })
+
+        // uniform width
+        setTimeout(function () {
+            var max = headers.reduce(function (max, h) {
+                return Math.max(max, h.getBoundingClientRect().width)
+            }, 0)
+
+            headers.forEach(function (h) {
+                h.style.width = max + 'px'
+            })
+        })
+
+        return sections
     }
 
     function drawObject(schema, data) {
