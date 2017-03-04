@@ -79,6 +79,12 @@
                         <header></header>
                     </section>
                 `)
+                .on('input', function(ev) {
+                    item.data[item.k] = ev.target.value
+                })
+                .on('change', function(ev) {
+                    item.data[item.k] = ev.target.value
+                })
 
                 var header = section.$$('header')
                 header.innerHTML = schema.title || item.k
@@ -111,7 +117,7 @@
     function drawObject(schema, data) {
         var props = schema.properties || {}
         var items = Object.keys(props).map(function(k) {
-            return { schema: props[k], k: k, v: (data || {})[k] }
+            return { schema: props[k], k: k, v: (data || {})[k], data: data }
         })
 
         return drawItems(schema, items)
@@ -119,7 +125,7 @@
 
     function drawArray(schema, data) {
         var items = (data || []).map(function(d, idx) {
-            return { schema: schema.item || {}, k: idx, v: d }
+            return { schema: schema.item || {}, k: idx, v: d, data: data }
         })
 
         return drawItems(schema, items)
@@ -212,7 +218,10 @@
             items.forEach(el.appendChild.bind(el))
             return el
         }
-        el.on = el.addEventListener
+        el.on = function() {
+            el.addEventListener.apply(el, arguments)
+            return el
+        }
         return el
     }
 
