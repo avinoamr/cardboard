@@ -71,7 +71,7 @@
         var headers = []
         var sections = items
             .filter(function(item) {
-                return !item.schema.hidden
+                return item.k[0] !== '_' && !item.schema.hidden
             })
             .map(function (item) {
                 var section = $(`
