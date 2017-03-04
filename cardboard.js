@@ -31,9 +31,7 @@
 
     function draw(schema, data) {
         if (!schema || !schema.type) {
-            var nest = (schema || {})._nest || 0
-            schema = Cardboard._autoSchema(data)
-            schema._nest = nest
+            schema = extend(Cardboard._autoSchema(data), schema)
         }
 
         if (schema.hidden) {
@@ -71,26 +69,30 @@
     drawItems.inner = function(schema, items) {
         var nest = schema._nest
         var headers = []
-        var sections = items.map(function (item) {
-            var section = $(`
-                <section class="cardboard-flex">
-                    <header></header>
-                </section>
-            `)
+        var sections = items
+            .filter(function(item) {
+                return !item.schema.hidden
+            })
+            .map(function (item) {
+                var section = $(`
+                    <section class="cardboard-flex">
+                        <header></header>
+                    </section>
+                `)
 
-            var header = section.$$('header')
-            header.innerHTML = schema.title || item.k
-            headers.push(header)
+                var header = section.$$('header')
+                header.innerHTML = schema.title || item.k
+                headers.push(header)
 
-            if (nest > 0) {
-                header.classList.add('cardboard-nest')
-                header.style['border-left-width'] =
-                    (nest * 30) + 'px'
-            }
+                if (nest > 0) {
+                    header.classList.add('cardboard-nest')
+                    header.style['border-left-width'] =
+                        (nest * 30) + 'px'
+                }
 
-            item.schema._nest = nest + 1
-            return section.appendMany(draw(item.schema, item.v))
-        })
+                item.schema._nest = nest + 1
+                return section.appendMany(draw(item.schema, item.v))
+            })
 
         // uniform width
         setTimeout(function () {
@@ -136,7 +138,7 @@
         return schema.enum
             ? drawEnum(schema, data)
                 .attr('disabled', schema.readOnly)
-                
+
             : $('<input class="cardboard-grow" />')
                 .attr('type', format || 'text')
                 .attr('value', data || schema.default || '')
@@ -212,5 +214,14 @@
         }
         el.on = el.addEventListener
         return el
+    }
+
+    function extend(target, source) {
+        for (var k in source) {
+            if (source[k] !== undefined) {
+                target[k] = source[k]
+            }
+        }
+        return target
     }
 })(window)
