@@ -186,6 +186,7 @@
         'string': drawString,
         'number': drawNumber,
         'boolean': drawBoolean,
+        'items': drawItems,
         // 'date-time': drawDateTime
     }
 
