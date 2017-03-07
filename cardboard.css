@@ -55,7 +55,7 @@
     content: '';
     position: relative;
     vertical-align: top;
-    top: 0.15em;
+    top: 0.35em;
     left: 0.15em;
 
     display: inline-block;
@@ -64,13 +64,13 @@
     height: 0.45em;
 
     border-style: solid;
-    border-width: 0.25em 0.25em 0 0;
+    border-width: 0.15em 0.15em 0 0;
     border-color: #7f8c8d;
     transform: rotate(45deg);
     transition: transform .3s, top .3s;
 }
 
 .cardboard .cardboard-toggle.cardboard-open:before {
-    top: 0;
+    top: 0.15em;
     transform: rotate(135deg);
 }
