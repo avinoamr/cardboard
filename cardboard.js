@@ -48,7 +48,7 @@
             return drawItems.inner(schema, data)
         }
 
-        var expand = $('<div class="cardboard-toggle"></div>')
+        var expand = $('<div class="cardboard-toggle">' + data.length + ' items</div>')
         var container = $('<div class="cardboard-full"></div>')
 
         var items

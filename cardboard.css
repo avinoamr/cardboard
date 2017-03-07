@@ -48,7 +48,6 @@
 }
 
 .cardboard .cardboard-toggle {
-    order: -10;
     cursor: pointer;
 }
 
