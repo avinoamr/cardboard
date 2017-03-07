@@ -99,17 +99,17 @@
                 item.schema._nest = nest + 1
                 return section.appendMany(draw(item.schema, item.v))
             })
-
-        // uniform width
-        setTimeout(function () {
-            var max = headers.reduce(function (max, h) {
-                return Math.max(max, h.getBoundingClientRect().width)
-            }, 0)
-
-            headers.forEach(function (h) {
-                h.style.width = max + 'px'
-            })
-        })
+        // 
+        // // uniform width
+        // setTimeout(function () {
+        //     var max = headers.reduce(function (max, h) {
+        //         return Math.max(max, h.getBoundingClientRect().width)
+        //     }, 0)
+        //
+        //     headers.forEach(function (h) {
+        //         h.style.width = max + 'px'
+        //     })
+        // })
 
         return sections
     }

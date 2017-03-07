@@ -16,6 +16,7 @@
     <body>
         <div id="one" class="container"></div>
         <div id="two" class="container"></div>
+        <div id="three" class="container"></div>
 
         <script src="../cardboard.js"></script>
         <script>
@@ -59,6 +60,15 @@
                 }
             })
             .draw(document.querySelector('#two'))
+
+            cardboard()
+                .data({
+                    one: {},
+                    two: {},
+                    long_text: {},
+                    very_very_very_long_text: {}
+                })
+                .draw(document.querySelector('#three'))
         </script>
 
     </body>
