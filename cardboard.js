@@ -18,7 +18,8 @@
     }
 
     Cardboard.prototype.schema = function(schema) {
-        this._schema = schema
+        // deep-copy the schema because we're going to change it.
+        this._schema = JSON.parse(JSON.stringify(schema))
         return this
     }
 
@@ -99,7 +100,7 @@
                 item.schema._nest = nest + 1
                 return section.appendMany(draw(item.schema, item.v))
             })
-        // 
+        //
         // // uniform width
         // setTimeout(function () {
         //     var max = headers.reduce(function (max, h) {
