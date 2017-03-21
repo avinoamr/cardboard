@@ -166,11 +166,23 @@
 
     function drawNumber (schema, data) {
         return drawInput('number', schema, data)
+            .on('input', onChange)
+            .on('change', onChange)
+
+        function onChange(ev) {
+            ev.detail = parseFloat(ev.target.value)
+        }
     }
 
     function drawBoolean(schema, data) {
         return drawInput('checkbox', schema, data)
             .attr('checked', data)
+            .on('input', onChange)
+            .on('change', onChange)
+
+        function onChange(ev) {
+            ev.detail = ev.target.checked
+        }
     }
 
     Cardboard._autoSchema = function(data) {
