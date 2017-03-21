@@ -121,6 +121,7 @@
     }
 
     function drawObject(schema, data) {
+        data = data || {}
         var props = schema.properties || {}
         var items = Object.keys(props).map(function(k) {
             return { schema: props[k], k: k, v: (data || {})[k], data: data }
@@ -130,6 +131,7 @@
     }
 
     function drawArray(schema, data) {
+        data = data || []
         var items = (data || []).map(function(d, idx) {
             return { schema: schema.item || {}, k: idx, v: d, data: data }
         })
