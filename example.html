@@ -66,10 +66,18 @@
                         type: 'object',
                         properties: {
                             v1: {
-                                type: Number
+                                type: 'number'
                             },
                             v2: {
-                                type: Number
+                                type: 'string'
+                            },
+                            v3: {
+                                type: 'object',
+                                properties: {
+                                    deep: {
+                                        type: 'string'
+                                    }
+                                }
                             }
                         }
                     }
