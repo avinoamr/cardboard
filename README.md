@@ -3,7 +3,7 @@ cardboard
 
 Minimalistic, portable, style-able forms for JSON schemas and javascript objects.
 
-[Demo](http://htmlpreview.github.io/?https://github.com/avinoamr/cardboard/blob/master/example/index.html)
+[Demo](http://htmlpreview.github.io/?https://github.com/avinoamr/cardboard/blob/master/example.html)
 
 ## Key Features
 1. Stand-alone & independent from other libraries like jQuery, Angular or
