@@ -81,12 +81,16 @@
                         <header></header>
                     </section>
                 `)
-                .on('input', function(ev) {
-                    item.data[item.k] = ev.target.value
-                })
-                .on('change', function(ev) {
-                    item.data[item.k] = ev.target.value
-                })
+                .on('input', onChange)
+                .on('change', onChange)
+
+                function onChange(ev) {
+                    if (ev.detail === undefined) {
+                        ev.detail = ev.target.value
+                    }
+                    item.data[item.k] = ev.detail
+                    ev.detail = item.data
+                }
 
                 var header = section.$$('header')
                 header.innerHTML = schema.title || item.k
@@ -101,7 +105,7 @@
                 item.schema._nest = nest + 1
                 return section.appendMany(draw(item.schema, item.v))
             })
-        //
+
         // // uniform width
         // setTimeout(function () {
         //     var max = headers.reduce(function (max, h) {
