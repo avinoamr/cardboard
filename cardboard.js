@@ -28,6 +28,7 @@
         var inputs = draw(this._schema, this._data)
         el.innerHTML = ''
         $(el).appendMany(inputs)
+        return el
     }
 
     function draw(schema, data) {

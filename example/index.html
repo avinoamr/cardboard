@@ -20,8 +20,9 @@
 
         <script src="../cardboard.js"></script>
         <script>
+        var d1
         cardboard()
-            .data({
+            .data(d1 = {
                 string: 'value',
                 number: 15,
                 bool: true,
@@ -35,9 +36,13 @@
                 list: ['alice', 100, [1, 2]]
             })
             .draw(document.querySelector('#one'))
+            .addEventListener('change', function() {
+                console.log('d1=', d1)
+            })
 
+        var d2
         cardboard()
-            .data({ animal: 'Horse'})
+            .data(d2 = { animal: 'Horse'})
             .schema({
                 type: 'object',
                 properties: {
@@ -60,15 +65,22 @@
                 }
             })
             .draw(document.querySelector('#two'))
+            .addEventListener('change', function() {
+                console.log('d2=', d2)
+            })
 
+            var d3
             cardboard()
-                .data({
+                .data(d3 = {
                     one: {},
                     two: {},
                     long_text: {},
                     very_very_very_long_text: {}
                 })
                 .draw(document.querySelector('#three'))
+                .addEventListener('change', function() {
+                    console.log('d3=', d3)
+                })
         </script>
 
     </body>
