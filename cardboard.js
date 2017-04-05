@@ -27,7 +27,100 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const STYLE = `
+.cardboard {
+    border-bottom: 1px solid #ddd;
+    display: block;
+}
+
+.cardboard .cardboard-hidden {
+    display: none;
+}
+
+.cardboard .cardboard-flex {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.cardboard .cardboard-grow {
+    flex-grow: 1
+}
+
+.cardboard .cardboard-full {
+    width: 100%;
+}
+
+.cardboard section {
+    padding: 0 10px;
+    border-top: 1px solid #ddd;
+    width: 100%;
+}
+
+.cardboard section > header {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    color: #7f8c8d;
+    padding: 12px 12px 12px 0;
+}
+
+.cardboard .cardboard-nest {
+    box-sizing: border-box;
+    border-left: 30px solid #f5f5f5;
+    padding-left: 10px;
+}
+
+.cardboard input {
+    display: block;
+    border: none;
+    outline: none;
+    background: none;
+    font-weight: normal;
+}
+
+.cardboard .cardboard-toggle {
+    cursor: pointer;
+}
+
+.cardboard .cardboard-toggle:before {
+    content: '';
+    position: relative;
+    vertical-align: top;
+    top: 0.35em;
+    left: 0.15em;
+
+    display: inline-block;
+    margin-right: 1em;
+    width: 0.45em;
+    height: 0.45em;
+
+    border-style: solid;
+    border-width: 0.15em 0.15em 0 0;
+    border-color: #7f8c8d;
+    transform: rotate(45deg);
+    transition: transform .3s, top .3s;
+}
+
+.cardboard .cardboard-toggle.cardboard-open:before {
+    top: 0.15em;
+    transform: rotate(135deg);
+}
+`
 class Cardboard extends HTMLElement {
+    attachedCallback() { // custom-elements v0
+        this.connectedCallback()
+    }
+
+    connectedCallback() {
+        if (this.inited) {
+            return
+        }
+
+        this.inited = true
+        this.parentNode.insertBefore($('<style>' + STYLE + '</style>'), this)
+    }
+
     data(data) {
         this._data = data
         return this
@@ -265,9 +358,13 @@ function extend(target, source) {
 }
 
 function cardboard(el) {
-    return !el || el instanceof cardboard.Cardboard
-        ? el
-        : Object.setPrototypeOf(el, cardboard.Cardboard.prototype)
+    if (el instanceof cardboard.Cardboard) {
+        return el // idempotent
+    }
+
+    Object.setPrototypeOf(el, cardboard.Cardboard.prototype)
+    el.connectedCallback() // harmless even when not connected.
+    return el
 }
 
 cardboard.Cardboard = Cardboard
