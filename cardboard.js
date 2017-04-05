@@ -287,5 +287,17 @@ cardboard.Cardboard = Cardboard
     .register(Number, drawNumber)
     .register(Boolean, drawBoolean)
 
+// register the element
+document.addEventListener('DOMContentLoaded', function () {
+    if ('customElements' in window) {
+        window.customElements.define('card-board', Cardboard)
+    } else if ('registerElement' in document) {
+        cardboard.Cardboard = document.registerElement('card-board', Cardboard)
+    } else {
+        console.warn('<card-board>: custom elements aren\'t supported')
+        console.warn('<card-board>: Initialize <draw-box> with cardboard(el)')
+    }
+})
+
 window.cardboard = cardboard
 })()
