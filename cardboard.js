@@ -52,7 +52,6 @@ const STYLE = `
 }
 
 .cardboard section {
-    padding: 0 10px;
     border-top: 1px solid #ddd;
     width: 100%;
 }
@@ -62,13 +61,12 @@ const STYLE = `
     font-weight: bold;
     font-size: 12px;
     color: #7f8c8d;
-    padding: 12px 12px 12px 0;
+    padding: 12px;
 }
 
 .cardboard .cardboard-nest {
     box-sizing: border-box;
     border-left: 30px solid #f5f5f5;
-    padding-left: 10px;
 }
 
 .cardboard input {
@@ -127,15 +125,14 @@ class Cardboard extends HTMLElement {
     }
 
     schema(schema) {
-        // deep-copy the schema because we're going to change it.
-        this._schema = JSON.parse(JSON.stringify(schema))
+        this._schema = schema
         return this
     }
 
     render() {
         var el = this
         el.classList.add('cardboard')
-        var inputs = draw(this._schema, this._data)
+        var inputs = draw(this._schema, this._data, {})
         el.innerHTML = ''
         $(el).appendMany(inputs)
         return el
@@ -149,7 +146,7 @@ class Cardboard extends HTMLElement {
 
 Cardboard.inputs = {}
 
-function draw(schema, data) {
+function draw(schema, data, options) {
     if (!schema || !schema.type) {
         schema = extend(Cardboard._autoSchema(data), schema)
     }
@@ -159,13 +156,13 @@ function draw(schema, data) {
     }
 
     var inputFn = Cardboard.inputs[schema.type] || Cardboard.inputs.string
-    return inputFn(schema, data)
+    return inputFn(schema, data, options)
 }
 
-function drawItems(schema, data) {
-    schema._nest = schema._nest || 0
-    if (!schema._nest) {
-        return drawItems.inner(schema, data)
+function drawItems(schema, data, options) {
+    options._nest = options._nest || 0
+    if (!options._nest) {
+        return drawItems.inner(schema, data, options)
     }
 
     var expand = $('<div class="cardboard-toggle"></div>')
@@ -175,7 +172,7 @@ function drawItems(schema, data) {
     expand.on('click', function() {
         expand.classList.toggle('cardboard-open')
         if (!items) {
-            items = drawItems.inner(schema, data)
+            items = drawItems.inner(schema, data, options)
             container.appendMany(items)
         }
 
@@ -186,8 +183,8 @@ function drawItems(schema, data) {
     return [expand, container]
 }
 
-drawItems.inner = function(schema, items) {
-    var nest = schema._nest
+drawItems.inner = function(schema, items, options) {
+    var nest = options._nest
     var headers = []
     var sections = items
         .filter(function(item) {
@@ -220,8 +217,9 @@ drawItems.inner = function(schema, items) {
                     (nest * 30) + 'px'
             }
 
-            item.schema._nest = nest + 1
-            return section.appendMany(draw(item.schema, item.v))
+            options = { _nest: nest + 1 }
+            // item.schema._nest = nest + 1
+            return section.appendMany(draw(item.schema, item.v, options))
         })
 
     // // uniform width
@@ -238,23 +236,23 @@ drawItems.inner = function(schema, items) {
     return sections
 }
 
-function drawObject(schema, data) {
+function drawObject(schema, data, options) {
     data = data || {}
     var props = schema.properties || {}
     var items = Object.keys(props).map(function(k) {
         return { schema: props[k], k: k, v: (data || {})[k], data: data }
     })
 
-    return drawItems(schema, items)
+    return drawItems(schema, items, options)
 }
 
-function drawArray(schema, data) {
+function drawArray(schema, data, options) {
     data = data || []
     var items = (data || []).map(function(d, idx) {
         return { schema: schema.item || {}, k: idx, v: d, data: data }
     })
 
-    return drawItems(schema, items)
+    return drawItems(schema, items, options)
 }
 
 function drawEnum(schema, data) {
@@ -367,6 +365,7 @@ function cardboard(el) {
     return el
 }
 
+cardboard.register = Cardboard.register.bind(Cardboard)
 cardboard.Cardboard = Cardboard
     .register('object', drawObject)
     .register('array', drawArray)
