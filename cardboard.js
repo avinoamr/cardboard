@@ -209,7 +209,7 @@ drawItems.inner = function(schema, items, options) {
             }
 
             var header = section.$$('header')
-            header.innerHTML = schema.title || item.k
+            header.innerHTML = item.schema.title || item.k
             headers.push(header)
 
             if (nest > 0) {
