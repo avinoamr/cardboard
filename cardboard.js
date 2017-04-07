@@ -111,12 +111,13 @@ class Cardboard extends HTMLElement {
     }
 
     connectedCallback() {
-        if (this.inited) {
+        var s = this.parentNode.querySelector('style#cardboard-style')
+        if (s) {
             return
         }
 
-        this.inited = true
-        this.parentNode.insertBefore($('<style>' + STYLE + '</style>'), this)
+        var s = $('<style id="cardboard-style">' + STYLE + '</style>')
+        this.parentNode.insertBefore(s, this)
     }
 
     data(data) {
