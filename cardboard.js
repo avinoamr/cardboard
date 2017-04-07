@@ -120,14 +120,15 @@ class Cardboard extends HTMLElement {
         this.parentNode.insertBefore(s, this)
     }
 
-    data(data) {
+    set data(data) {
         this._data = data
-        return this
+        this._schema = null
+        setTimeout(this.render.bind(this), 100)
     }
 
-    schema(schema) {
+    set schema(schema) {
         this._schema = schema
-        return this
+        setTimeout(this.render.bind(this), 100)
     }
 
     render() {
