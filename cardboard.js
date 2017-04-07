@@ -257,6 +257,7 @@ function drawArray(schema, data, options) {
 }
 
 function drawEnum(schema, data) {
+    data || (data = schema.default)
     return schema.enum.reduce(function (select, item) {
         var option = $('<option>' + item + '</option>')
             .attr('selected', item == data)
