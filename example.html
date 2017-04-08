@@ -21,85 +21,82 @@
         <script src="cardboard.js"></script>
         <script>
         var d1
-        cardboard(document.querySelector('#one'))
-            .data(d1 = {
-                string: 'value',
-                number: 15,
-                bool: true,
-                object: {
-                    v1: 'alice',
-                    v2: 'bob',
-                    v3: {
-                        ok: 1
-                    }
-                },
-                list: ['alice', 100, [1, 2]]
-            })
-            .render()
-            .addEventListener('change', function() {
-                console.log('d1=', d1)
-            })
+        var el = cardboard(document.querySelector('#one'))
+        el.addEventListener('change', function() {
+            console.log('d1=', d1)
+        })
+        el.data = d1 = {
+            string: 'value',
+            number: 15,
+            bool: true,
+            object: {
+                v1: 'alice',
+                v2: 'bob',
+                v3: {
+                    ok: 1
+                }
+            },
+            list: ['alice', 100, [1, 2]]
+        }
 
         var d2
-        cardboard(document.querySelector('#two'))
-            .data(d2 = { animal: 'Horse'})
-            .schema({
-                type: 'object',
-                properties: {
-                    animal: {
-                        type: 'string',
-                        enum: ['Dog', 'Cat', 'Horse', 'Snake'],
-                    },
-                    name: {
-                        type: 'string',
-                        placeholder: 'Rexy?'
-                    },
-                    age: {
-                        type: 'number',
-                        default: 8,
-                        readOnly: true
-                    },
-                    _private: {
-                        hidden: true
-                    },
-                    nested: {
-                        type: 'object',
-                        properties: {
-                            v1: {
-                                type: 'number'
-                            },
-                            v2: {
-                                type: 'string'
-                            },
-                            v3: {
-                                type: 'object',
-                                properties: {
-                                    deep: {
-                                        type: 'string'
-                                    }
+        var el = cardboard(document.querySelector('#two'))
+        el.addEventListener('change', function() {
+            console.log('d2=', d2)
+        })
+        el.data = d2 = { animal: 'Horse'}
+        el.schema = {
+            type: 'object',
+            properties: {
+                animal: {
+                    type: 'string',
+                    enum: ['Dog', 'Cat', 'Horse', 'Snake'],
+                },
+                name: {
+                    type: 'string',
+                    placeholder: 'Rexy?'
+                },
+                age: {
+                    type: 'number',
+                    default: 8,
+                    readOnly: true
+                },
+                _private: {
+                    hidden: true
+                },
+                nested: {
+                    type: 'object',
+                    properties: {
+                        v1: {
+                            type: 'number'
+                        },
+                        v2: {
+                            type: 'string'
+                        },
+                        v3: {
+                            type: 'object',
+                            properties: {
+                                deep: {
+                                    type: 'string'
                                 }
                             }
                         }
                     }
                 }
-            })
-            .render()
-            .addEventListener('change', function() {
-                console.log('d2=', d2)
-            })
+            }
+        }
 
         var d3
-        cardboard(document.querySelector('#three'))
-            .data(d3 = {
-                one: {},
-                two: {},
-                long_text: {},
-                very_very_very_long_text: {}
-            })
-            .render()
-            .addEventListener('change', function() {
-                console.log('d3=', d3)
-            })
+        var el = cardboard(document.querySelector('#three'))
+        el.addEventListener('change', function() {
+            console.log('d3=', d3)
+        })
+        el.data = d3 = {
+            one: {},
+            two: {},
+            long_text: {},
+            very_very_very_long_text: {}
+        }
         </script>
 
     </body>
