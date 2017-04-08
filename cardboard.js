@@ -106,6 +106,23 @@ const STYLE = `
 }
 `
 class Cardboard extends HTMLElement {
+    constructor() {
+        super()
+        this.createdCallback() // custom-elements v1
+    }
+
+    createdCallback() {
+        // element may have been upgraded when the data attribute was already
+        // set, not through the setter.
+        var data = this.data
+        delete this.data
+        this.data = data
+
+        var schema = this.schema
+        delete this.schema
+        this.schema = schema
+    }
+
     attachedCallback() { // custom-elements v0
         this.connectedCallback()
     }
@@ -371,7 +388,9 @@ function cardboard(el) {
     }
 
     Object.setPrototypeOf(el, cardboard.Cardboard.prototype)
-    el.connectedCallback() // harmless even when not connected.
+    el.createdCallback()
+    el.connectedCallback() // harmless even when not connected - not really
+    // because we inject the style-sheet to the parent node.
     return el
 }
 
