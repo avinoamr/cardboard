@@ -122,13 +122,20 @@ class Cardboard extends HTMLElement {
 
     set data(data) {
         this._data = data
-        this._schema = null
         setTimeout(this.render.bind(this), 100)
+    }
+
+    get data() {
+        return this._data
     }
 
     set schema(schema) {
         this._schema = schema
         setTimeout(this.render.bind(this), 100)
+    }
+
+    get schema() {
+        return this._schema
     }
 
     render() {
