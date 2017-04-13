@@ -28,35 +28,35 @@
  * SOFTWARE.
  */
 const STYLE = `
-.cardboard {
+card-board {
     border-bottom: 1px solid #ddd;
     display: block;
 }
 
-.cardboard .cardboard-hidden {
+card-board .cardboard-hidden {
     display: none;
 }
 
-.cardboard .cardboard-flex {
+card-board .cardboard-flex {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.cardboard .cardboard-grow {
+card-board .cardboard-grow {
     flex-grow: 1
 }
 
-.cardboard .cardboard-full {
+card-board .cardboard-full {
     width: 100%;
 }
 
-.cardboard section {
+card-board section {
     border-top: 1px solid #ddd;
     width: 100%;
 }
 
-.cardboard section > header {
+card-board section > header {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 12px;
@@ -64,12 +64,12 @@ const STYLE = `
     padding: 12px;
 }
 
-.cardboard .cardboard-nest {
+card-board .cardboard-nest {
     box-sizing: border-box;
     border-left: 30px solid #f5f5f5;
 }
 
-.cardboard input {
+card-board input {
     display: block;
     border: none;
     outline: none;
@@ -77,11 +77,11 @@ const STYLE = `
     font-weight: normal;
 }
 
-.cardboard .cardboard-toggle {
+card-board .cardboard-toggle {
     cursor: pointer;
 }
 
-.cardboard .cardboard-toggle:before {
+card-board .cardboard-toggle:before {
     content: '';
     position: relative;
     vertical-align: top;
@@ -100,7 +100,7 @@ const STYLE = `
     transition: transform .3s, top .3s;
 }
 
-.cardboard .cardboard-toggle.cardboard-open:before {
+card-board .cardboard-toggle.cardboard-open:before {
     top: 0.15em;
     transform: rotate(135deg);
 }
